@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use JiraBundle\Entity\Document;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -18,7 +19,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/getTasks", name="tasks_overview")
+     * @Route("/", name="tasks_overview")
      */
     public function getTasksAction()
     {
@@ -33,7 +34,12 @@ class DefaultController extends Controller
     public function getDocumentsAction()
     {
         return $this->render(
-            'documents/documents.html.twig'
+            'documents/documents.html.twig',
+            [
+                'documents' => $this->getDoctrine()
+                    ->getRepository(Document::class)
+                    ->getAll()
+            ]
         );
     }
 }

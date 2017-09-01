@@ -10,24 +10,14 @@
         </tr>
         </thead>
         <tbody>
+        {% for document in documents %}
         <tr>
-            <th><a href="#">google.com</a></th>
-            <td>Mark</td>
-            <td><a href="{{ path('users_overview') }}">Otto</a></td>
+            <th><a href="{{ document.getUrl() }}" target="_blank">{{ document.getFilename() }}</a></th>
+            <td>{{ document.getCreateDate() }}</td>
+            <td><a href="{{ path('users_overview') }}">---</a></td>
             <td>documents to be</td>
         </tr>
-        <tr>
-            <th>2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>sorted by time</td>
-        </tr>
-        <tr>
-            <th>3</th>
-            <td>Larry</td>
-            <td>2017/08/30 12:15:40</td>
-            <td>most recent</td>
-        </tr>
+        {% endfor %}
         </tbody>
     </table>
 {% endblock %}

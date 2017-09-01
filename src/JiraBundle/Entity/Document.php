@@ -5,8 +5,6 @@ namespace JiraBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Document
- *
  * @ORM\Table(name="document")
  * @ORM\Entity(repositoryClass="JiraBundle\Repository\DocumentRepository")
  */
@@ -15,11 +13,11 @@ class Document
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private $document_id;
 
     /**
      * @ORM\Column(type="string")
@@ -110,9 +108,9 @@ class Document
      *
      * @return int
      */
-    public function getId()
+    public function getDocumentId()
     {
-        return $this->id;
+        return $this->document_id;
     }
 }
 
