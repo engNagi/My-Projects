@@ -37,5 +37,3 @@ class DefaultController extends Controller
         );
     }
 }
-//add Action suffix to indicate a Controller function
-//add _overview suffix to indicate a framework name of a Controller function
