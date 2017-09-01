@@ -4,19 +4,38 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="homepage")
+     * @Route("/getUsers", name="users_overview")
      */
-    public function indexAction(Request $request)
+    public function getUsersAction()
     {
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'name' => 'YEAH',
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render(
+            'default/users.html.twig'
+        );
+    }
+
+    /**
+     * @Route("/getTasks", name="task_overview")
+     */
+    public function getTasksAction()
+    {
+        return $this->render(
+            'default/task.html.twig'
+        );
+    }
+
+    /**
+     * @Route("/getDocuments", name="documents_overview")
+     */
+    public function getDocumentsAction()
+    {
+        return $this->render(
+            'default/documents.html.twig'
+        );
     }
 }
+//add Action suffix to indicate a Controller function
+//add _overview suffix to indicate a framework name of a Controller function
