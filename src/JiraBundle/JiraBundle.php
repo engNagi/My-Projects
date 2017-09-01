@@ -1,10 +1,9 @@
 <?php
 
-namespace AppBundle;
+namespace JiraBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class AppBundle extends Bundle
+class JiraBundle extends Bundle
 {
-
 }
