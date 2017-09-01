@@ -14,7 +14,7 @@ class Task
 {
     /**
      * @ORM\Column(type="integer")
-     * @ORM\Column(unique="true")
+     * @ORM\Column(unique=true)
      * @ORM\Id
      */private $task_id;
     /**

@@ -10,8 +10,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use JiraBundle\Entity\Document;
-//use JiraBundle\Entity\Task;
-//use JiraBundle\Entity\User;
+use JiraBundle\Entity\Task;
+use JiraBundle\Entity\User;
 class JiraUpdateCommand extends ContainerAwareCommand
 {
     protected function configure()
@@ -53,22 +53,39 @@ class JiraUpdateCommand extends ContainerAwareCommand
             //-Task-iD  of the document into the database.
                 $document = new Document();
 
-                $document->setCreateDate($attachment->created);
+
+                $document->setCreateDate(date('Y-m-d H:i:s', strtotime($attachment->created)));
                 $document->setFilename($attachment->filename);
                 $document->setUrl($attachment->content);
+                $document->setTaskId($decodedResults->key);
 
 
-            //Creating a new document Object, Which is used to store
-            //-name of the User
-            //-Email of the user
-               // $user = new User();
 
-                //$user->setTalent($author->displayName);
-                //$user->setRole($attachment->name);
+//            /*Creating a new document Object, Which is used to store
+//            *name of the User
+//            *Email of the user
+//            * */
+//               $user = new User();
+//
+//                $user->setUserId();
+//                $user->setEmail();
+//                $user->setRole();
+//                $user->setTalent();
+//
+//
+//                $task = new Task();
+//
+//                $task->setTaskId();
+//                $task->setLanguages();
+//                $task->setTasksDate();
 
-            // It will delay most SQL commands until EntityManager#flush() is invoked
-            // which will then issue all necessary SQL statements to synchronize your objects with the database in the most efficient way and a single,
-            //short transaction, taking care of maintaining referential integrity.
+
+
+
+
+            /* It will delay most SQL commands until EntityManager#flush() is invoked
+             which will then issue all necessary SQL statements to synchronize your objects with the database in the most efficient way and a single,
+            short transaction, taking care of maintaining referential integrity.*/
                 $em->persist($document);
             }
         $em->flush();
