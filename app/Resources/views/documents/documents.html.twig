@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th style="width: 25%;">Filename</th>
+            <th style="width: 25%;">Date</th>
+            <th style="width: 25%;">User</th>
+            <th style="width: 25%;">Comments</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th><a href="#">google.com</a></th>
+            <td>Mark</td>
+            <td><a href="{{ path('users_overview') }}">Otto</a></td>
+            <td>documents to be</td>
+        </tr>
+        <tr>
+            <th>2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>sorted by time</td>
+        </tr>
+        <tr>
+            <th>3</th>
+            <td>Larry</td>
+            <td>2017/08/30 12:15:40</td>
+            <td>most recent</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

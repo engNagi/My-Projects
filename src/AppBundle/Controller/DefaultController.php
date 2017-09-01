@@ -13,17 +13,17 @@ class DefaultController extends Controller
     public function getUsersAction()
     {
         return $this->render(
-            'default/users.html.twig'
+            'users/users.html.twig'
         );
     }
 
     /**
-     * @Route("/getTasks", name="task_overview")
+     * @Route("/getTasks", name="tasks_overview")
      */
     public function getTasksAction()
     {
         return $this->render(
-            'default/task.html.twig'
+            'tasks/tasks.html.twig'
         );
     }
 
@@ -33,7 +33,7 @@ class DefaultController extends Controller
     public function getDocumentsAction()
     {
         return $this->render(
-            'default/documents.html.twig'
+            'documents/documents.html.twig'
         );
     }
 }
