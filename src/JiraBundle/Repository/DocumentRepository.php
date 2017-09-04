@@ -1,7 +1,6 @@
 <?php
 
 namespace JiraBundle\Repository;
-
 use JiraBundle\Entity\Document;
 use Doctrine\ORM\EntityRepository;
 

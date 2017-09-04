@@ -12,8 +12,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use JiraBundle\Entity\Document;
 use JiraBundle\Entity\Task;
 use JiraBundle\Entity\User;
+
 class JiraUpdateCommand extends ContainerAwareCommand
 {
+    const CUSTOMFIELD_LANGUAGES = 'customfield_10306';
+
     protected function configure()
     {
         $this
@@ -26,70 +29,74 @@ class JiraUpdateCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $client = new Client(['base_uri' => 'http://192.168.44.92']);
+        $response = $client->request('GET', '/rest/api/latest/issue/XCNT-1833');
+        $result = $response->getBody();
+        $decodedResults = json_decode($result);
+        $em = $this->getContainer()->get('doctrine')->getManager();
 
-         // Create a client with a base URI
-            $client = new Client(['base_uri' => 'http://192.168.44.92']);
+        $this->isValidResponse($decodedResults);
+        $this->truncateTables($em);
 
-            // Send a request to http://192.168.44.92/rest/api/latest/issue/XCNT-1833
-            $response = $client->request('GET', '/rest/api/latest/issue/XCNT-1833');
+        $task = new Task();
+        $task->setTaskId($decodedResults->id);
+        $task->setTasksDate(date('Y-m-d H:i:s', strtotime($decodedResults->fields->created)));
+        $task->setLanguages(
+            $this->getLanguagesFromCustomfield($decodedResults->fields->{self::CUSTOMFIELD_LANGUAGES})
+        );
+        $em->persist($task);
 
-            //Getting the body of response as object and save it to the result
-            $result=$response->getBody();
+        foreach ($decodedResults->fields->attachment as $attachment)
+        {
+            $document = new Document();
+            $document->setCreateDate(date('Y-m-d H:i:s', strtotime($attachment->created)));
+            $document->setFilename($attachment->filename);
+            $document->setUrl($attachment->content);
+            $document->setTaskId($decodedResults->key);
+/*
+            $user = new User();
+            $user->setUserId($attachment->author->name);
+            $user->setEmail($attachment->author->emailAddress);
+            $user->setTalent($attachment->author->displayName);
+*/
+            $em->persist($document);
+        }
 
-            //Decoding the Json Object and store it as string in $decodedResults
-            $decodedResults = json_decode($result);
-
-            //method gets Doctrine's entity manager object, which is the most important object in Doctrine.
-            // It's responsible for saving objects to, and fetching objects from, the database.
-            $em = $this->getContainer()->get('doctrine')->getManager();
-
-            //loop through the attachment of the json object
-            foreach ($decodedResults->fields->attachment as $attachment)
-            {
-            //Creating a new document Object, Which is used to store
-            //-Date of the document
-            //-name of the document
-            //-URL of the document
-            //-Task-iD  of the document into the database.
-                $document = new Document();
-
-
-                $document->setCreateDate(date('Y-m-d H:i:s', strtotime($attachment->created)));
-                $document->setFilename($attachment->filename);
-                $document->setUrl($attachment->content);
-                $document->setTaskId($decodedResults->key);
-
-
-
-//            /*Creating a new document Object, Which is used to store
-//            *name of the User
-//            *Email of the user
-//            * */
-//               $user = new User();
-//
-//                $user->setUserId();
-//                $user->setEmail();
-//                $user->setRole();
-//                $user->setTalent();
-//
-//
-//                $task = new Task();
-//
-//                $task->setTaskId();
-//                $task->setLanguages();
-//                $task->setTasksDate();
-
-
-
-
-
-            /* It will delay most SQL commands until EntityManager#flush() is invoked
-             which will then issue all necessary SQL statements to synchronize your objects with the database in the most efficient way and a single,
-            short transaction, taking care of maintaining referential integrity.*/
-                $em->persist($document);
-            }
         $em->flush();
         $output->writeln('Command result.');
+    }
+
+    /**
+     * @param array $langFields
+     * @return string
+     */
+    private function getLanguagesFromCustomfield(array $langFields) {
+        $languages = [];
+        foreach($langFields as $language) {
+            $languages[] = $language->value;
+        }
+        return implode(',' , $languages);
+    }
+
+    /**
+     * @param $em
+     */
+    private function truncateTables($em)
+    {
+        $connection = $em->getConnection();
+        $platform = $connection->getDatabasePlatform();
+        $connection->executeUpdate($platform->getTruncateTableSQL('tasks', true));
+        $connection->executeUpdate($platform->getTruncateTableSQL('document', true));
+    }
+
+    /**
+     * @param $decodedResults
+     */
+    private function isValidResponse($decodedResults)
+    {
+        if ($decodedResults === NULL) {
+            exit;
+        }
     }
 
 }

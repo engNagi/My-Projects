@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Task
  *
- * @ORM\Table(name="task")
+ * @ORM\Table(name="tasks")
  * @ORM\Entity(repositoryClass="JiraBundle\Repository\TaskRepository")
  */
 class Task
@@ -16,11 +16,14 @@ class Task
      * @ORM\Column(type="integer")
      * @ORM\Column(unique=true)
      * @ORM\Id
-     */private $task_id;
+     */
+    private $task_id;
+
     /**
      * @ORM\Column(type="string")
      */
     private $languages;
+
     /**
      * @ORM\Column(type="string")
      */
