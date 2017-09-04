@@ -12,4 +12,13 @@ class DocumentRepository extends EntityRepository
     public function getAll() {
         return $this->getEntityManager()->getRepository(Document::class)->findAll();
     }
+
+    /**
+     * @return Document|null
+     */
+    public function getById($document_id)
+    {
+        return $this->getEntityManager()->getRepository(Document::class)->find($document_id);
+
+    }
 }
