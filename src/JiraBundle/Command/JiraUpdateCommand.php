@@ -104,4 +104,20 @@ class JiraUpdateCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param $decodedResults
+     * @return string
+     */
+    private function getOriginalDocId($decodedResults)
+    {
+        $file_date = $decodedResults->fields->attachment[0]->created;
+        $original_id = $decodedResults->fields->attachment[0]->id;
+        foreach ($decodedResults->fields->attachment as $attachment) {
+            if($file_date > $attachment->created){
+                $original_id = $attachment->id;
+            }
+        }
+        return (int) $original_id;
+    }
+
 }

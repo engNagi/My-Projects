@@ -3,63 +3,28 @@
     <table class="table">
         <thead class="thead-default">
         <tr>
-            <th style="width: 10%;">Ticket No.</th>
-            <th style="width: 20%;">Language</th>
-            <th style="width: 20%;">Started On</th>
+            <th style="width: 5%;">Task Id</th>
+            <th style="width: 25%;">Title</th>
+            <th style="width: 15%;">Languages</th>
             <th style="width: 20%;">User</th>
-            <th style="width: 30%;">Email</th>
+            <th style="width: 15%;">Started On</th>
+            <th style="width: 15%;">Original Document Id</th>
+            <th style="width: 5%;">State</th>
+
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th><a href="{{ path('documents_overview') }}">6182</a></th>
-            <td>English</td>
-            <td>2017/08/30 12:08:02</td>
-            <td>@mdo</td>
-        </tr>
-        <tr>
-            <th>2643</th>
-            <td>German</td>
-            <td>2017/08/30 12:13:34</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th>9567</th>
-            <td>French</td>
-            <td>2017/08/30 12:15:40</td>
-            <td>@twitter</td>
-        </tr>
-        </tbody>
-    </table>
-    <table class="table">
-        <thead class="thead-default">
-        <tr>
-            <th style="width: 10%;">Ticket No.</th>
-            <th style="width: 20%;">Language</th>
-            <th style="width: 20%;">Completed On</th>
-            <th style="width: 20%;">User</th>
-            <th style="width: 30%;">Email</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th><a href="{{ path('documents_overview') }}">6182</a></th>
-            <td>English</td>
-            <td>2017/08/30 12:08:02</td>
-            <td>@mdo</td>
-        </tr>
-        <tr>
-            <th>2643</th>
-            <td>German</td>
-            <td>2017/08/30 12:13:34</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th>9567</th>
-            <td>French</td>
-            <td>2017/08/30 12:15:40</td>
-            <td>@twitter</td>
-        </tr>
+        {% for task in tasks %}
+            <tr>
+                <th>{{ task.getTaskId() }}</th>
+                <td>{{ task.getTitle() }}</td>
+                <td>{{ task.getLanguages() }}</td>
+                <td>{{ task.getUserId() }}</td>
+                <td>{{ task.getTasksDate() }}</td>
+                <td>{{ task.getOriginalDocumentId() }}</td>
+                <td>{{ task.getState() }}</td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 {% endblock %}
