@@ -53,20 +53,26 @@ class JiraUpdateCommand extends ContainerAwareCommand
 
         foreach ($decodedResults->fields->attachment as $attachment)
         {
-            $document = new Document();
-            $document->setCreateDate(date('Y-m-d H:i:s', strtotime($attachment->created)));
-            $document->setFilename($attachment->filename);
-            $document->setUrl($attachment->content);
-            $document->setTaskId($decodedResults->key);
-/*
+            if ($this->isPdf($attachment->filename))
+            {
+                $document = new Document();
+                $document->setCreateDate(date('Y-m-d H:i:s', strtotime($attachment->created)));
+                $document->setFilename($attachment->filename);
+                $document->setUrl($attachment->content);
+                $document->setTaskId($decodedResults->key);
+                $document->setAuthor($attachment->author->name);
+    /*
             $user = new User();
             $user->setUserId($attachment->author->name);
             $user->setEmail($attachment->author->emailAddress);
             $user->setTalent($attachment->author->displayName);
+            title = fields->summary
+            original file
+            state = fields->status->name
 */
-            $em->persist($document);
+                $em->persist($document);
+            }
         }
-
         $em->flush();
         $output->writeln('Command result.');
     }
@@ -81,6 +87,14 @@ class JiraUpdateCommand extends ContainerAwareCommand
             $languages[] = $language->value;
         }
         return implode(',' , $languages);
+    }
+
+    /**
+     * @param string $filename
+     * @return bool
+     */
+    private function isPdf(string $filename): bool {
+        return substr(strtolower($filename), -3)== 'pdf';
     }
 
     /**
@@ -119,5 +133,4 @@ class JiraUpdateCommand extends ContainerAwareCommand
         }
         return (int) $original_id;
     }
-
 }
