@@ -54,6 +54,7 @@ class JiraUpdateCommand extends ContainerAwareCommand
                 $document->setFilename($attachment->filename);
                 $document->setUrl($attachment->content);
                 $document->setTaskId($decodedResults->key);
+                $document->setAuthor($attachment->author->name);
                 /*
                             $user = new User();
                             $user->setUserId($attachment->author->name);
