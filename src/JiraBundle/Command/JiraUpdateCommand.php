@@ -44,24 +44,27 @@ class JiraUpdateCommand extends ContainerAwareCommand
         $task->setLanguages(
             $this->getLanguagesFromCustomfield($decodedResults->fields->{self::CUSTOMFIELD_LANGUAGES})
         );
+        $task->setOriginalDocumentId($this->getOriginalDocId($decodedResults));
+        $task->setTitle($decodedResults->fields->summary);
+        $task->setState($decodedResults->fields->status->name);
+        $task->setUserId($decodedResults->fields->creator->displayName);
+
         $em->persist($task);
 
         foreach ($decodedResults->fields->attachment as $attachment)
         {
-            if ($this->isPdf($attachment->filename)) {
-                $document = new Document();
-                $document->setCreateDate(date('Y-m-d H:i:s', strtotime($attachment->created)));
-                $document->setFilename($attachment->filename);
-                $document->setUrl($attachment->content);
-                $document->setTaskId($decodedResults->key);
-                /*
-                            $user = new User();
-                            $user->setUserId($attachment->author->name);
-                            $user->setEmail($attachment->author->emailAddress);
-                            $user->setTalent($attachment->author->displayName);
-                */
-                $em->persist($document);
-            }
+            $document = new Document();
+            $document->setCreateDate(date('Y-m-d H:i:s', strtotime($attachment->created)));
+            $document->setFilename($attachment->filename);
+            $document->setUrl($attachment->content);
+            $document->setTaskId($decodedResults->key);
+/*
+            $user = new User();
+            $user->setUserId($attachment->author->name);
+            $user->setEmail($attachment->author->emailAddress);
+            $user->setTalent($attachment->author->displayName);
+*/
+            $em->persist($document);
         }
 
         $em->flush();
@@ -78,14 +81,6 @@ class JiraUpdateCommand extends ContainerAwareCommand
             $languages[] = $language->value;
         }
         return implode(',' , $languages);
-    }
-
-    /**
-     * @param string $filename
-     * @return bool
-     */
-    private function isPdf(string $filename): bool {
-        return substr(strtolower($filename), -3)== 'pdf';
     }
 
     /**

@@ -30,6 +30,90 @@ class Task
     private $tasks_date;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $title;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $original_document_id;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $state;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $user_id;
+
+    /**
+     * @return mixed
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * @param mixed $user_id
+     */
+    public function setUserId($user_id)
+    {
+        $this->user_id = $user_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOriginalDocumentId()
+    {
+        return $this->original_document_id;
+    }
+
+    /**
+     * @param mixed $original_document_id
+     */
+    public function setOriginalDocumentId($original_document_id)
+    {
+        $this->original_document_id = $original_document_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param mixed $state
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+    /**
      * @return mixed
      */
     public function getLanguages()
