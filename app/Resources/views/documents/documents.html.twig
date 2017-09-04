@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <table class="table">
+    <table class="table data_Table" id="example" >
         <thead>
         <tr>
             <th style="width: 25%;">Filename</th>
@@ -13,7 +13,7 @@
         {% for document in documents %}
         <tr>
             <th><a href="{{ document.getUrl() }}" target="_blank">{{ document.getFilename() }}</a></th>
-            <td>{{ document.getCreateDate() }}</td>
+            <td>{{ document.getCreateDate()|date("Y.m.d - H.i") }}</td>
             <td><a href="{{ path('users_overview') }}">---</a></td>
             <td>documents to be</td>
         </tr>
