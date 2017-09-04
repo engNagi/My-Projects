@@ -44,27 +44,35 @@ class JiraUpdateCommand extends ContainerAwareCommand
         $task->setLanguages(
             $this->getLanguagesFromCustomfield($decodedResults->fields->{self::CUSTOMFIELD_LANGUAGES})
         );
+        $task->setOriginalDocumentId($this->getOriginalDocId($decodedResults));
+        $task->setTitle($decodedResults->fields->summary);
+        $task->setState($decodedResults->fields->status->name);
+        $task->setUserId($decodedResults->fields->creator->displayName);
+
         $em->persist($task);
 
         foreach ($decodedResults->fields->attachment as $attachment)
         {
-            if ($this->isPdf($attachment->filename)) {
+            if ($this->isPdf($attachment->filename))
+            {
                 $document = new Document();
                 $document->setCreateDate(date('Y-m-d H:i:s', strtotime($attachment->created)));
                 $document->setFilename($attachment->filename);
                 $document->setUrl($attachment->content);
                 $document->setTaskId($decodedResults->key);
                 $document->setAuthor($attachment->author->name);
-                /*
-                            $user = new User();
-                            $user->setUserId($attachment->author->name);
-                            $user->setEmail($attachment->author->emailAddress);
-                            $user->setTalent($attachment->author->displayName);
-                */
+    /*
+            $user = new User();
+            $user->setUserId($attachment->author->name);
+            $user->setEmail($attachment->author->emailAddress);
+            $user->setTalent($attachment->author->displayName);
+            title = fields->summary
+            original file
+            state = fields->status->name
+*/
                 $em->persist($document);
             }
         }
-
         $em->flush();
         $output->writeln('Command result.');
     }
@@ -110,4 +118,19 @@ class JiraUpdateCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param $decodedResults
+     * @return string
+     */
+    private function getOriginalDocId($decodedResults)
+    {
+        $file_date = $decodedResults->fields->attachment[0]->created;
+        $original_id = $decodedResults->fields->attachment[0]->id;
+        foreach ($decodedResults->fields->attachment as $attachment) {
+            if($file_date > $attachment->created){
+                $original_id = $attachment->id;
+            }
+        }
+        return (int) $original_id;
+    }
 }
