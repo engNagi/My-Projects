@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use JiraBundle\Entity\Document;
 use JiraBundle\Entity\Task;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DefaultController extends Controller
@@ -46,6 +45,16 @@ class DefaultController extends Controller
                     ->getRepository(Document::class)
                     ->getAll()
             ]
+        );
+    }
+
+    /**
+     * @Route("/getDetailedView", name="detailed_view")
+     */
+    public function getDetailedView()
+    {
+        return $this->render(
+            'tasks/detailedtasks.html.twig'
         );
     }
 }
