@@ -122,6 +122,14 @@ class Task
     }
 
     /**
+     * @return array
+     */
+    public function getLanguagesAsArray()
+    {
+        return explode(',', $this->languages);
+    }
+
+    /**
      * @param mixed $languages
      */
     public function setLanguages($languages)
