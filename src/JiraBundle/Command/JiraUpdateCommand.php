@@ -51,7 +51,7 @@ class JiraUpdateCommand extends ContainerAwareCommand
                 $issue = json_decode($result);
 
                 $task = new Task();
-                $task->setTaskId($issue->id);
+                $task->setTaskId($issue->key);
                 $task->setTasksDate(date('Y-m-d H:i:s', strtotime($issue->fields->created)));
                 $task->setLanguages(
                     $this->getLanguagesFromCustomfield($issue->fields->{self::CUSTOMFIELD_LANGUAGES}));
