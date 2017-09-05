@@ -58,6 +58,10 @@ class JiraUpdateCommand extends ContainerAwareCommand
 
                 $em->persist($task);
 
+                $taskImage = new \Imagick('http://www.pdf995.com/samples/pdf.pdf#page=0');
+                $taskImage->setImageFormat('jpg');
+                $taskImage->writeImage(__DIR__ . '/../../../var/cache/' . $issue->key . '.jpg');
+
                 foreach ($issue->fields->attachment as $attachment) {
                     if (!$this->isIdml($attachment->filename)) {
                         $document = new Document();
@@ -68,11 +72,6 @@ class JiraUpdateCommand extends ContainerAwareCommand
                         $document->setAuthor($attachment->author->name);
                         $document->setDocumentId($attachment->id);
 
-                        /*
-                        $documentImages = new \Imagick('http://www.pdf995.com/samples/pdf.pdf');
-                        $documentImages->setImageFormat('jpg');
-                        $documentImages->writeImage($attachment->filename);
-                        */
                         $em->persist($document);
                     }
                 }

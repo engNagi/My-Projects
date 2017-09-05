@@ -7,6 +7,7 @@ use JiraBundle\Repository\DocumentRepository;
 use JiraBundle\Service\TaskService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DefaultController extends Controller
 {
@@ -84,5 +85,12 @@ class DefaultController extends Controller
                 'translatedDocuments' => $service->sortDocumentsByLanguage($documents,$languages)
             ]
         );
+    }
+
+    /**
+     * @Route("/getTaskImage/{id}", name="task_image")
+     */
+    public function getImagesAction($id){
+        return new BinaryFileResponse(__DIR__ . '/../../../var/cache/' . $id . '.jpg');
     }
 }
