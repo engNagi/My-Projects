@@ -15,9 +15,24 @@ class Document
      *
      * @ORM\Column(type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $document_id;
+
+    /**
+     * @return int
+     */
+    public function getDocumentId(): int
+    {
+        return $this->document_id;
+    }
+
+    /**
+     * @param int $document_id
+     */
+    public function setDocumentId(int $document_id)
+    {
+        $this->document_id = $document_id;
+    }
 
     /**
      * @ORM\Column(type="string")
@@ -128,14 +143,5 @@ class Document
         $this->task_id = $task_id;
     }
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getDocumentId()
-    {
-        return $this->document_id;
-    }
 }
 

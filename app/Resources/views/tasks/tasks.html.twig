@@ -15,13 +15,14 @@
         </thead>
         <tbody>
         {% for task in tasks %}
+            {% set document = taskToDocument[task.getTaskId()] %}
             <tr>
                 <th><a href="{{ path('task_detail', {'id':task.getTaskId()}) }}">{{ task.getTaskId() }}</a></th>
                 <td>{{ task.getTitle() }}</td>
                 <td>{{ task.getLanguages() }}</td>
                 <td>{{ task.getUserId() }}</td>
                 <td>{{ task.getTasksDate() }}</td>
-                <td>{{ task.getOriginalDocumentId() }}</td>
+                <td><a href="{{ document.getUrl() }}" target="_blank">{{ document.getFilename() }}</a></td>
                 <td>{{ task.getState() }}</td>
             </tr>
         {% endfor %}

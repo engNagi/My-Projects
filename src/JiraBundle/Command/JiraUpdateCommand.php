@@ -4,14 +4,13 @@ namespace JiraBundle\Command;
 
 
 use GuzzleHttp\Client;
+use JiraBundle\Entity\Document;
+use JiraBundle\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use JiraBundle\Entity\Document;
-use JiraBundle\Entity\Task;
-use JiraBundle\Entity\User;
 
 class JiraUpdateCommand extends ContainerAwareCommand
 {
@@ -61,15 +60,15 @@ class JiraUpdateCommand extends ContainerAwareCommand
                 $document->setUrl($attachment->content);
                 $document->setTaskId($decodedResults->key);
                 $document->setAuthor($attachment->author->name);
-    /*
-            $user = new User();
-            $user->setUserId($attachment->author->name);
-            $user->setEmail($attachment->author->emailAddress);
-            $user->setTalent($attachment->author->displayName);
-            title = fields->summary
+                $document->setDocumentId($attachment->id);
+                /*
+                           $user = new User();
+                            $user->setUserId($attachment->author->name);
+                            $user->setEmail($attachment->author->emailAddress);
+                            $user->setTalent($attachment->author->displayName);
+                title = fields->summary
             original file
-            state = fields->status->name
-*/
+            state = fields->status->name*/
                 $em->persist($document);
             }
         }
@@ -124,11 +123,18 @@ class JiraUpdateCommand extends ContainerAwareCommand
      */
     private function getOriginalDocId($decodedResults)
     {
-        $file_date = $decodedResults->fields->attachment[0]->created;
-        $original_id = $decodedResults->fields->attachment[0]->id;
+        $file_date = null;
+        $original_id = 0;
         foreach ($decodedResults->fields->attachment as $attachment) {
-            if($file_date > $attachment->created){
+            if(
+                (
+                    $file_date === null
+                    || $file_date > $attachment->created
+                )
+                && $this->isPdf($attachment->filename)
+            ) {
                 $original_id = $attachment->id;
+                $file_date = $attachment->created;
             }
         }
         return (int) $original_id;
