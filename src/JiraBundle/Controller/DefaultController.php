@@ -4,6 +4,7 @@ namespace JiraBundle\Controller;
 use JiraBundle\Entity\Document;
 use JiraBundle\Entity\Task;
 use JiraBundle\Repository\DocumentRepository;
+use JiraBundle\Service\TaskService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -67,8 +68,22 @@ class DefaultController extends Controller
      */
     public function getTasksDetailAction($id)
     {
+        $documents = $this->getDoctrine()
+            ->getRepository(Document::class)
+            ->getByTask($id);
+
+        $languages = $this->getDoctrine()
+            ->getRepository(Task::class)
+            ->find($id)
+            ->getLanguagesAsArray();
+
+        $service = new TaskService();
+
         return $this->render(
-            'tasks/detailedtasks.html.twig'
+            'tasks/detailedtasks.html.twig',
+            [
+                'translatedDocuments' => $service->sortDocumentsByLanguage($documents,$languages)
+            ]
         );
     }
 }

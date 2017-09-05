@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Task
 {
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      * @ORM\Column(unique=true)
      * @ORM\Id
      */
@@ -119,6 +119,14 @@ class Task
     public function getLanguages()
     {
         return $this->languages;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLanguagesAsArray()
+    {
+        return explode(',', $this->languages);
     }
 
     /**
