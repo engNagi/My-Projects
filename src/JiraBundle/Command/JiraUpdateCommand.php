@@ -6,6 +6,7 @@ namespace JiraBundle\Command;
 use GuzzleHttp\Client;
 use JiraBundle\Entity\Document;
 use JiraBundle\Entity\Task;
+use JiraBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -38,12 +39,9 @@ class JiraUpdateCommand extends ContainerAwareCommand
         $this->isValidResponse($decodedResults);
         $this->truncateTables($em);
 
-//        dump($x);
-//        exit();        dump($x);
-//        exit();
-
         if ($decodedResults->total > 0)
         {
+            $users = [];
             foreach ( $decodedResults->issues as $issue )
             {
                 $response = $client->request('GET', '/rest/api/latest/issue/' . $issue->key);
@@ -71,20 +69,59 @@ class JiraUpdateCommand extends ContainerAwareCommand
                         $document->setTaskId($issue->key);
                         $document->setAuthor($attachment->author->name);
                         $document->setDocumentId($attachment->id);
-                        /*
-                                   $user = new User();
-                                    $user->setUserId($attachment->author->name);
-                                    $user->setEmail($attachment->author->emailAddress);
-                                    $user->setTalent($attachment->author->displayName);
-                        title = fields->summary
-                    original file
-                    state = fields->status->name*/
                         $em->persist($document);
+
+                        if ($issue->fields->assignee)
+                        {
+                            $user = new User();
+                            $user->setUserId($issue->fields->assignee->key);
+                            $user->setEmail($issue->fields->assignee->emailAddress);
+                            $user->setTalent($issue->fields->assignee->displayName);
+                            $users[$user->getUserId()] = $user;
+                        }
+
+                        if ($issue->fields->creator)
+                        {
+                            $user = new User();
+                            $user->setUserId($issue->fields->creator->key);
+                            $user->setEmail($issue->fields->creator->emailAddress);
+                            $user->setTalent($issue->fields->creator->displayName);
+                            $users[$user->getUserId()] = $user;
+                        }
+
+                        if ($issue->fields->reporter)
+                        {
+                            $user = new User();
+                            $user->setUserId($issue->fields->reporter->key);
+                            $user->setEmail($issue->fields->reporter->emailAddress);
+                            $user->setTalent($issue->fields->reporter->displayName);
+                            $users[$user->getUserId()] = $user;
+                        }
+
+                        if ($issue->fields->comment)
+                        {
+                            foreach ($issue->fields->comment->comments as $comment)
+                            {
+                                $user = new User();
+                                $user->setUserId($comment->author->key);
+                                $user->setEmail($comment->author->emailAddress);
+                                $user->setTalent($comment->author->displayName);
+                                $users[$user->getUserId()] = $user;
+                            }
+                        }
                     }
                 }
+
                 $em->flush();
-                $output->writeln('Command result.');
+
             }
+
+            foreach ($users as $user) {
+                $em->persist($user);
+            }
+
+            $em->flush();
+            $output->writeln('Command result.');
         }
     }
 
@@ -117,6 +154,7 @@ class JiraUpdateCommand extends ContainerAwareCommand
         $platform = $connection->getDatabasePlatform();
         $connection->executeUpdate($platform->getTruncateTableSQL('tasks', true));
         $connection->executeUpdate($platform->getTruncateTableSQL('document', true));
+        $connection->executeUpdate($platform->getTruncateTableSQL('users', true));
     }
 
     /**
