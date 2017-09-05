@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use JiraBundle\Entity\Document;
 use JiraBundle\Entity\Task;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DefaultController extends Controller
