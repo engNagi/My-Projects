@@ -20,7 +20,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/getTasks", name="tasks_overview")
+     * @Route("/", name="tasks_overview")
      */
     public function getTasksAction()
     {
@@ -50,9 +50,9 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/getDetailedView", name="detailed_view")
+     * @Route("/getTask/{id}", name="task_detail")
      */
-    public function getDetailedView()
+    public function getTasksDetailAction($id)
     {
         return $this->render(
             'tasks/detailedtasks.html.twig'

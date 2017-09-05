@@ -16,7 +16,7 @@
         <tbody>
         {% for task in tasks %}
             <tr>
-                <th>{{ task.getTaskId() }}</th>
+                <th><a href="{{ path('task_detail', {'id':task.getTaskId()}) }}">{{ task.getTaskId() }}</a></th>
                 <td>{{ task.getTitle() }}</td>
                 <td>{{ task.getLanguages() }}</td>
                 <td>{{ task.getUserId() }}</td>
