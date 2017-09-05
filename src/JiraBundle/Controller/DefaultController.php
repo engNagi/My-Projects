@@ -38,12 +38,11 @@ class DefaultController extends Controller
             $taskToDocument[$task->getTaskId()] = $documentRepository->getById($task->getOriginalDocumentId());
         }
 
-
         return $this->render(
             'tasks/tasks.html.twig',
             [
                 'tasks' => $tasks,
-                'taskToDocument' => $taskToDocument
+                'taskToDocument' => $taskToDocument,
             ]
         );
     }

@@ -38,10 +38,6 @@ class JiraUpdateCommand extends ContainerAwareCommand
         $this->isValidResponse($decodedResults);
         $this->truncateTables($em);
 
-//        dump($x);
-//        exit();        dump($x);
-//        exit();
-
         if ($decodedResults->total > 0)
         {
             foreach ( $decodedResults->issues as $issue )
@@ -71,14 +67,12 @@ class JiraUpdateCommand extends ContainerAwareCommand
                         $document->setTaskId($issue->key);
                         $document->setAuthor($attachment->author->name);
                         $document->setDocumentId($attachment->id);
+
                         /*
-                                   $user = new User();
-                                    $user->setUserId($attachment->author->name);
-                                    $user->setEmail($attachment->author->emailAddress);
-                                    $user->setTalent($attachment->author->displayName);
-                        title = fields->summary
-                    original file
-                    state = fields->status->name*/
+                        $documentImages = new \Imagick('http://www.pdf995.com/samples/pdf.pdf');
+                        $documentImages->setImageFormat('jpg');
+                        $documentImages->writeImage($attachment->filename);
+                        */
                         $em->persist($document);
                     }
                 }
