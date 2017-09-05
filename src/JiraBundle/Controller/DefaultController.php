@@ -57,8 +57,18 @@ class DefaultController extends Controller
             [
                 'documents' => $this->getDoctrine()
                     ->getRepository(Document::class)
-                    ->findAll()
+                    ->getAll()
             ]
+        );
+    }
+
+    /**
+     * @Route("/getTask/{id}", name="task_detail")
+     */
+    public function getTasksDetailAction($id)
+    {
+        return $this->render(
+            'tasks/detailedtasks.html.twig'
         );
     }
 }
