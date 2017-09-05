@@ -29,51 +29,63 @@ class JiraUpdateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $client = new Client(['base_uri' => 'http://192.168.44.92']);
-        $response = $client->request('GET', '/rest/api/latest/issue/XCNT-1833');
+        $response = $client->request('GET', '/rest/api/latest/search.json');
+
         $result = $response->getBody();
         $decodedResults = json_decode($result);
-        $em = $this->getContainer()->get('doctrine')->getManager();
 
+        $em = $this->getContainer()->get('doctrine')->getManager();
         $this->isValidResponse($decodedResults);
         $this->truncateTables($em);
 
-        $task = new Task();
-        $task->setTaskId($decodedResults->key);
-        $task->setTasksDate(date('Y-m-d H:i:s', strtotime($decodedResults->fields->created)));
-        $task->setLanguages(
-            $this->getLanguagesFromCustomfield($decodedResults->fields->{self::CUSTOMFIELD_LANGUAGES})
-        );
-        $task->setOriginalDocumentId($this->getOriginalDocId($decodedResults));
-        $task->setTitle($decodedResults->fields->summary);
-        $task->setState($decodedResults->fields->status->name);
-        $task->setUserId($decodedResults->fields->creator->displayName);
+//        dump($x);
+//        exit();        dump($x);
+//        exit();
 
-        $em->persist($task);
-
-        foreach ($decodedResults->fields->attachment as $attachment)
+        if ($decodedResults->total > 0)
         {
-            if ($this->isPdf($attachment->filename))
+            foreach ( $decodedResults->issues as $issue )
             {
-                $document = new Document();
-                $document->setCreateDate(date('Y-m-d H:i:s', strtotime($attachment->created)));
-                $document->setFilename($attachment->filename);
-                $document->setUrl($attachment->content);
-                $document->setTaskId($decodedResults->key);
-                $document->setAuthor($attachment->author->name);
-                $document->setDocumentId($attachment->id);
-                /*
-                           $user = new User();
-                            $user->setUserId($attachment->author->name);
-                            $user->setEmail($attachment->author->emailAddress);
-                            $user->setTalent($attachment->author->displayName);
-                title = fields->summary
-            original file
-            state = fields->status->name*/
-                $em->persist($document);
+                $response = $client->request('GET', '/rest/api/latest/issue/' . $issue->key);
+                $result = $response->getBody();
+                $issue = json_decode($result);
+
+                $task = new Task();
+                $task->setTaskId($issue->id);
+                $task->setTasksDate(date('Y-m-d H:i:s', strtotime($issue->fields->created)));
+                $task->setLanguages(
+                    $this->getLanguagesFromCustomfield($issue->fields->{self::CUSTOMFIELD_LANGUAGES}));
+                $task->setOriginalDocumentId($this->getOriginalDocId($issue));
+                $task->setTitle($issue->fields->summary);
+                $task->setState($issue->fields->status->name);
+                $task->setUserId($issue->fields->creator->displayName);
+
+                $em->persist($task);
+
+                foreach ($issue->fields->attachment as $attachment) {
+                    if (!$this->isIdml($attachment->filename)) {
+                        $document = new Document();
+                        $document->setCreateDate(date('Y-m-d H:i:s', strtotime($attachment->created)));
+                        $document->setFilename($attachment->filename);
+                        $document->setUrl($attachment->content);
+                        $document->setTaskId($issue->key);
+                        $document->setAuthor($attachment->author->name);
+                        $document->setDocumentId($attachment->id);
+                        /*
+                                   $user = new User();
+                                    $user->setUserId($attachment->author->name);
+                                    $user->setEmail($attachment->author->emailAddress);
+                                    $user->setTalent($attachment->author->displayName);
+                        title = fields->summary
+                    original file
+                    state = fields->status->name*/
+                        $em->persist($document);
+                    }
+                }
+                $em->flush();
+                $output->writeln('Command result.');
             }
         }
-        $em->flush();
-        $output->writeln('Command result.');
     }
 
     /**
@@ -92,8 +104,8 @@ class JiraUpdateCommand extends ContainerAwareCommand
      * @param string $filename
      * @return bool
      */
-    private function isPdf(string $filename): bool {
-        return substr(strtolower($filename), -3)== 'pdf';
+    private function isIdml(string $filename): bool {
+        return substr(strtolower($filename), -4)== 'idml';
     }
 
     /**
@@ -131,7 +143,7 @@ class JiraUpdateCommand extends ContainerAwareCommand
                     $file_date === null
                     || $file_date > $attachment->created
                 )
-                && $this->isPdf($attachment->filename)
+                && !$this->isIdml($attachment->filename)
             ) {
                 $original_id = $attachment->id;
                 $file_date = $attachment->created;
