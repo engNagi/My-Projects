@@ -4,14 +4,13 @@ namespace JiraBundle\Command;
 
 
 use GuzzleHttp\Client;
+use JiraBundle\Entity\Document;
+use JiraBundle\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use JiraBundle\Entity\Document;
-use JiraBundle\Entity\Task;
-use JiraBundle\Entity\User;
 
 class JiraUpdateCommand extends ContainerAwareCommand
 {
