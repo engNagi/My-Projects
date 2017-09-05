@@ -38,7 +38,7 @@ class JiraUpdateCommand extends ContainerAwareCommand
         $this->truncateTables($em);
 
         $task = new Task();
-        $task->setTaskId($decodedResults->id);
+        $task->setTaskId($decodedResults->key);
         $task->setTasksDate(date('Y-m-d H:i:s', strtotime($decodedResults->fields->created)));
         $task->setLanguages(
             $this->getLanguagesFromCustomfield($decodedResults->fields->{self::CUSTOMFIELD_LANGUAGES})

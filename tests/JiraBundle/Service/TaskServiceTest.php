@@ -52,4 +52,25 @@ class TaskServiceTest extends TestCase {
         );
     }
 
+    /**
+     * @dataProvider provide_specialFilenames
+     */
+    public function test_sortDocumentsByLanguage_specialCases($language, $filename) {
+        $document = new Document();
+        $document->setFilename($filename);
+
+        $this->assertEquals(
+            [$language => [$document]],
+            $this->service->sortDocumentsByLanguage([$document], [$language])
+        );
+    }
+
+    public function provide_specialFilenames() {
+        return [
+            ['US', '_US_.pdf'],
+            ['US', 'test US.docx'],
+            ['US', 'US.docx'],
+            ['US', 'test-us.docx'],
+        ];
+    }
 }

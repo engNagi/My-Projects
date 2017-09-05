@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Task
 {
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      * @ORM\Column(unique=true)
      * @ORM\Id
      */
