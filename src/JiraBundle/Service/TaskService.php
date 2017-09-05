@@ -11,6 +11,10 @@ class TaskService {
      * @return array
      */
     public function sortDocumentsByLanguage(array $documents, array $languages) {
-        return [];
+        $sortedDocuments = [];
+        foreach ($languages as $language) {
+            $sortedDocuments[$language] = $documents;
+        }
+        return $sortedDocuments;
     }
 }
