@@ -2,7 +2,6 @@
 
 namespace JiraBundle\Command;
 
-
 use GuzzleHttp\Client;
 use JiraBundle\Entity\Document;
 use JiraBundle\Entity\Task;
