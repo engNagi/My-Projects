@@ -1,16 +1,15 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <table class="table">
+    <table class="table table-striped">
         <thead class="thead-default">
         <tr>
-            <th style="width: 5%;">Task Id</th>
-            <th style="width: 25%;">Title</th>
-            <th style="width: 15%;">Languages</th>
-            <th style="width: 20%;">User</th>
-            <th style="width: 15%;">Started On</th>
-            <th style="width: 15%;">Original Document Id</th>
-            <th style="width: 5%;">State</th>
-
+            <th>Task Id</th>
+            <th>Title</th>
+            <th>Languages</th>
+            <th>User</th>
+            <th>Started On</th>
+            <th>Original Document</th>
+            <th>State</th>
         </tr>
         </thead>
         <tbody>
@@ -22,10 +21,16 @@
                 <td>{{ task.getLanguages() }}</td>
                 <td>{{ task.getUserId() }}</td>
                 <td>{{ task.getTasksDate() }}</td>
-                <td><a href="{{ document.getUrl() }}" target="_blank">{{ document.getFilename() }}</a></td>
+                <td>
+                    <img class="js_document_preview" align="left" width="64" height="64" src="{{ path('task_image', {'id':task.getTaskId()}) }}" style="margin-right:10px;">
+                    <a href="{{ document.getUrl() }}" target="_blank">{{ document.getFilename() }}</a>
+                </td>
                 <td>{{ task.getState() }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+
+
 {% endblock %}

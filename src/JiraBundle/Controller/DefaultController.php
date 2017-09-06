@@ -7,18 +7,10 @@ use JiraBundle\Repository\DocumentRepository;
 use JiraBundle\Service\TaskService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DefaultController extends Controller
 {
-    /**
-     * @Route("/getUsers", name="users_overview")
-     */
-    public function getUsersAction()
-    {
-        return $this->render(
-            'users/users.html.twig'
-        );
-    }
 
     /**
      * @Route("/", name="tasks_overview")
@@ -38,12 +30,11 @@ class DefaultController extends Controller
             $taskToDocument[$task->getTaskId()] = $documentRepository->getById($task->getOriginalDocumentId());
         }
 
-
         return $this->render(
             'tasks/tasks.html.twig',
             [
                 'tasks' => $tasks,
-                'taskToDocument' => $taskToDocument
+                'taskToDocument' => $taskToDocument,
             ]
         );
     }
@@ -85,5 +76,12 @@ class DefaultController extends Controller
                 'translatedDocuments' => $service->sortDocumentsByLanguage($documents,$languages)
             ]
         );
+    }
+
+    /**
+     * @Route("/getTaskImage/{id}", name="task_image")
+     */
+    public function getImagesAction($id){
+        return new BinaryFileResponse($this->getParameter('kernel.cache_dir') . '/' . $id . '.jpg');
     }
 }
