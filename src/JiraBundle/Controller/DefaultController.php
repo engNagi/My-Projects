@@ -83,12 +83,11 @@ class DefaultController extends Controller
 
         $matchedDocuments = $service->sortDocumentsByLanguage($documents,$languages);
         $possibleMatches = $service->tryToSort($matchedDocuments['--']);
-        dump($possibleMatches); exit;
 
         return $this->render(
             'tasks/detailedtasks.html.twig',
             [
-                'translatedDocuments' => $service->sortDocumentsByLanguage($documents,$languages),
+                'translatedDocuments' => array_merge($matchedDocuments, $possibleMatches),
                 'task' => $task,
                 'users' => $users
             ]

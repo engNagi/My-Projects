@@ -33,12 +33,21 @@ class TaskService
 
     public function tryToSort(array $documents)
     {
-            $pattern = '/(^|[^a-z])([a-z]{2})[^a-z]/i';
-            foreach ($documents as $document) {
-                if(preg_match($pattern,$document->getFilename(),$matches)){
-                    dump($matches);
+        $matchedDocuments = [
+            '--' => []
+        ];
+        $pattern = '/(^|[^a-z])([a-z]{2})[^a-z]/i';
+        foreach ($documents as $document) {
+            if(preg_match($pattern, $document->getFilename(), $matches))
+            {
+                if ($matches[2] == 'US' || $matches[2] == 'UK')
+                {
+                    $matchedDocuments['--'][] = $document;
+                    continue;
                 }
+                $matchedDocuments[$matches[2]][] = $document;
             }
-        return [];
+        }
+        return $matchedDocuments;
     }
 }
