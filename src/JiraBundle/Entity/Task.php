@@ -126,7 +126,10 @@ class Task
      */
     public function getLanguagesAsArray()
     {
-        return explode(',', $this->languages);
+        return explode(
+            ',',
+            str_replace(' ', '', $this->languages)
+        );
     }
 
     /**
