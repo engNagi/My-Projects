@@ -1,6 +1,7 @@
 <?php
 
 namespace JiraBundle\Controller;
+use GuzzleHttp\Psr7\Response;
 use JiraBundle\Entity\Document;
 use JiraBundle\Entity\Task;
 use JiraBundle\Entity\User;
@@ -9,6 +10,7 @@ use JiraBundle\Service\TaskService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DefaultController extends Controller
 {
@@ -64,10 +66,6 @@ class DefaultController extends Controller
             ->getRepository(Document::class)
             ->getByTask($id);
 
-        $users = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->getByTask($id);
-
         $languages = $this->getDoctrine()
             ->getRepository(Task::class)
             ->find($id)
@@ -89,4 +87,20 @@ class DefaultController extends Controller
     public function getImagesAction($id){
         return new BinaryFileResponse($this->getParameter('kernel.cache_dir') . '/' . $id . '.jpg');
     }
+
+    /**
+     * @Route("/getUser/{id}", name="user_detail")
+     * @param $id
+     * @return Response
+     */
+    public function getUsersDetailAction($id)
+    {
+        /** @var User $user */
+        $user = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->getByUserId($id);
+
+        return new JsonResponse($user);
+    }
+
 }

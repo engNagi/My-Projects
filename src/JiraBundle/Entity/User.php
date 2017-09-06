@@ -14,7 +14,7 @@ class User
      * @ORM\Column(type="string")
      * @ORM\Id
      */
-    private $user_id;
+    public $user_id;
 
     /**
      * @ORM\Column(type="string")
@@ -40,11 +40,11 @@ class User
     /**
      * @ORM\Column(type="string")
      */
-    private $talent;
+    public $talent;
     /**
      * @ORM\Column(type="string")
      */
-    private $email;
+    public $email;
 
     /**
      * @return mixed

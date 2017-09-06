@@ -16,7 +16,7 @@
             </tr>
             <tr>
                 <td><b>Creator</b>:</td>
-                <td>Andrew Marcione</td>
+                <td class="js_user_preview" >Andrew Marcione</td>
                 <td><b>Original Document Id</b>:</td>
                 <td>470043</td>
             </tr>
@@ -43,7 +43,7 @@
                 <td>{% if loop.first %}{{ language }}{% endif %}</td>
                 <td>{{ document.getFilename() }}</td>
                 <td>{{ document.getCreateDate() }}</td>
-                <td>{{ document.getAuthor() }}</td>
+                <td><span class="js_user_preview">{{ document.getAuthor() }}</span></td>
             </tr>
             {% endfor %}
         {% endfor %}
