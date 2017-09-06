@@ -91,6 +91,6 @@ class DefaultController extends Controller
      * @Route("/getTaskImage/{id}", name="task_image")
      */
     public function getImagesAction($id){
-        return new BinaryFileResponse(__DIR__ . '/../../../var/cache/' . $id . '.jpg');
+        return new BinaryFileResponse($this->getParameter('kernel.cache_dir') . '/' . $id . '.jpg');
     }
 }

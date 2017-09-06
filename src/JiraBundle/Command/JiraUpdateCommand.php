@@ -42,25 +42,46 @@ class JiraUpdateCommand extends ContainerAwareCommand
         {
             foreach ( $decodedResults->issues as $issue )
             {
+                $output->writeln('processing ' . $issue->key);
+
                 $response = $client->request('GET', '/rest/api/latest/issue/' . $issue->key);
                 $result = $response->getBody();
                 $issue = json_decode($result);
+                $originalDocument = $this->getOriginalDocument($issue);
 
                 $task = new Task();
                 $task->setTaskId($issue->key);
                 $task->setTasksDate(date('Y-m-d H:i:s', strtotime($issue->fields->created)));
-                $task->setLanguages(
-                    $this->getLanguagesFromCustomfield($issue->fields->{self::CUSTOMFIELD_LANGUAGES}));
-                $task->setOriginalDocumentId($this->getOriginalDocId($issue));
+                $task->setLanguages($this->getLanguagesFromCustomfield($issue->fields->{self::CUSTOMFIELD_LANGUAGES}));
+                $task->setOriginalDocumentId($originalDocument->getDocumentId());
                 $task->setTitle($issue->fields->summary);
                 $task->setState($issue->fields->status->name);
                 $task->setUserId($issue->fields->creator->displayName);
-
                 $em->persist($task);
 
-                $taskImage = new \Imagick('http://www.pdf995.com/samples/pdf.pdf#page=0');
-                $taskImage->setImageFormat('jpg');
-                $taskImage->writeImage(__DIR__ . '/../../../var/cache/' . $issue->key . '.jpg');
+                try
+                {
+                    $url = 'http://192.168.44.92/rest/api/latest/attachment/' . $issue->key . '/' . str_replace(' ', '%20', $originalDocument->getFilename());
+                    if ($this->isPdf($url))
+                    {
+                        $taskImage = new \Imagick($url);
+                        for ($x = 1; $x <= $taskImage->getNumberImages(); $x++)
+                        {
+                            $taskImage->previousImage();
+                            if ($x === $taskImage->getNumberImages())
+                            {
+                                // we reached the first page
+                                $taskImage->setImageFormat('jpg');
+                                $taskImage->writeImage($this->getContainer()->getParameter('kernel.cache_dir') . '/' . $issue->key . '.jpg');
+                            }
+                        }
+                    } else {
+                        //@TODO provide dummy image
+                    }
+                } catch (\ImagickException $exception) {
+                    $output->writeln($url);
+                    $output->writeln($exception->getMessage());
+                }
 
                 foreach ($issue->fields->attachment as $attachment) {
                     if (!$this->isIdml($attachment->filename)) {
@@ -76,9 +97,10 @@ class JiraUpdateCommand extends ContainerAwareCommand
                     }
                 }
                 $em->flush();
-                $output->writeln('Command result.');
             }
         }
+
+        $output->writeln('Success.');
     }
 
     /**
@@ -99,6 +121,14 @@ class JiraUpdateCommand extends ContainerAwareCommand
      */
     private function isIdml(string $filename): bool {
         return substr(strtolower($filename), -4)== 'idml';
+    }
+
+    /**
+     * @param string $filename
+     * @return bool
+     */
+    private function isPdf(string $filename): bool {
+        return substr(strtolower($filename), -3)== 'pdf';
     }
 
     /**
@@ -123,25 +153,25 @@ class JiraUpdateCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param $decodedResults
-     * @return string
+     * @param string $decodedResults
+     * @return Document
      */
-    private function getOriginalDocId($decodedResults)
+    private function getOriginalDocument($decodedResults): Document
     {
-        $file_date = null;
-        $original_id = 0;
+        $original = new Document();
         foreach ($decodedResults->fields->attachment as $attachment) {
             if(
                 (
-                    $file_date === null
-                    || $file_date > $attachment->created
+                    $original->getCreateDate() === null
+                    || $original->getCreateDate() > $attachment->created
                 )
                 && !$this->isIdml($attachment->filename)
             ) {
-                $original_id = $attachment->id;
-                $file_date = $attachment->created;
+                $original->setDocumentId($attachment->id);
+                $original->setCreateDate($attachment->created);
+                $original->setFilename($attachment->filename);
             }
         }
-        return (int) $original_id;
+        return $original;
     }
 }
