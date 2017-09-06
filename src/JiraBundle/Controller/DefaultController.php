@@ -75,10 +75,16 @@ class DefaultController extends Controller
 
         $service = new TaskService();
 
+        $matchedDocuments = $service->sortDocumentsByLanguage($documents,$languages);
+        $possibleMatches = $service->tryToSort($matchedDocuments['--']);
+        dump($possibleMatches); exit;
+
         return $this->render(
             'tasks/detailedtasks.html.twig',
             [
-                'translatedDocuments' => $service->sortDocumentsByLanguage($documents,$languages)
+                'translatedDocuments' => $service->sortDocumentsByLanguage($documents,$languages),
+                'task' => $task,
+                'users' => $users
             ]
         );
     }

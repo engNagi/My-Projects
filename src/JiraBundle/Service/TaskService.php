@@ -4,13 +4,15 @@ namespace JiraBundle\Service;
 
 use JiraBundle\Entity\Document;
 
-class TaskService {
+class TaskService
+{
     /**
      * @param Document[] $documents
      * @param array $languages
      * @return array
      */
-    public function sortDocumentsByLanguage(array $documents, array $languages) {
+    public function sortDocumentsByLanguage(array $documents, array $languages)
+    {
         $sortedDocuments = array_combine($languages, array_pad([], count($languages), []));
         foreach ($documents as $document)
         {
@@ -27,5 +29,16 @@ class TaskService {
             $sortedDocuments['--'][] = $document;
         }
         return $sortedDocuments;
+    }
+
+    public function tryToSort(array $documents)
+    {
+            $pattern = '/(^|[^a-z])([a-z]{2})[^a-z]/i';
+            foreach ($documents as $document) {
+                if(preg_match($pattern,$document->getFilename(),$matches)){
+                    dump($matches);
+                }
+            }
+        return [];
     }
 }
