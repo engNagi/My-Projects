@@ -3,19 +3,17 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 25%;">Filename</th>
-            <th style="width: 25%;">Date</th>
-            <th style="width: 25%;">User</th>
-            <th style="width: 25%;">Comments</th>
+            <th>Filename</th>
+            <th>Date</th>
+            <th>User</th>
         </tr>
         </thead>
         <tbody>
         {% for document in documents %}
         <tr>
-            <th><a href="{{ document.getUrl() }}" target="_blank">{{ document.getFilename() }}</a></th>
-            <td>{{ document.getCreateDate()|date("Y.m.d - H.i") }}</td>
-            <td><a href="{{ path('users_overview') }}">---</a></td>
-            <td>documents to be</td>
+            <th><a href="{{ document.getUrl }}" target="_blank">{{ document.getFilename }}</a></th>
+            <td>{{ document.getCreateDate|date("Y-m-d H:i:s") }}</td>
+            <td>{{ document.getAuthor }}</td>
         </tr>
         {% endfor %}
         </tbody>
