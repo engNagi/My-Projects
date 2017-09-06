@@ -22,7 +22,7 @@
                 <td>{{ task.getUserId() }}</td>
                 <td>{{ task.getTasksDate() }}</td>
                 <td>
-                    <img align="left" width="64" height="64" src="{{ path('task_image', {'id':task.getTaskId()}) }}" style="margin-right:10px;">
+                    <img class="js_document_preview" align="left" width="64" height="64" src="{{ path('task_image', {'id':task.getTaskId()}) }}" style="margin-right:10px;">
                     <a href="{{ document.getUrl() }}" target="_blank">{{ document.getFilename() }}</a>
                 </td>
                 <td>{{ task.getState() }}</td>
@@ -30,4 +30,7 @@
         {% endfor %}
         </tbody>
     </table>
+
+
+
 {% endblock %}
