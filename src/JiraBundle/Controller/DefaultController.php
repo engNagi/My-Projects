@@ -71,12 +71,22 @@ class DefaultController extends Controller
             ->find($id)
             ->getLanguagesAsArray();
 
+        $task = $this->getDoctrine()
+            ->getRepository(Task::class)
+            ->find($id);
+
+        $users = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->getByTask($id);
+
         $service = new TaskService();
 
         return $this->render(
             'tasks/detailedtasks.html.twig',
             [
-                'translatedDocuments' => $service->sortDocumentsByLanguage($documents,$languages)
+                'translatedDocuments' => $service->sortDocumentsByLanguage($documents,$languages),
+                'task' => $task,
+                'users' => $users
             ]
         );
     }
