@@ -21,7 +21,6 @@ class DocumentRepository extends EntityRepository
     public function getById($document_id)
     {
         return $this->getEntityManager()->getRepository(Document::class)->find($document_id);
-
     }
 
     /**
