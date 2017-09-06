@@ -8,18 +8,52 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="JiraBundle\Repository\UserRepository")
  */
-class User
+class User implements \JsonSerializable
 {
     /**
      * @ORM\Column(type="string")
      * @ORM\Id
      */
-    public $user_id;
+    private $user_id;
 
     /**
      * @ORM\Column(type="string")
      */
     private $task_id;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $talent;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $email;
+
+
+    /**
+     * @return mixed
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTalent()
+    {
+        return $this->talent;
+    }
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
 
     /**
      * @return mixed
@@ -38,36 +72,11 @@ class User
     }
 
     /**
-     * @ORM\Column(type="string")
-     */
-    public $talent;
-    /**
-     * @ORM\Column(type="string")
-     */
-    public $email;
-
-    /**
-     * @return mixed
-     */
-    public function getUserId()
-    {
-        return $this->user_id;
-    }
-
-    /**
      * @param mixed $user_id
      */
     public function setUserId($user_id)
     {
         $this->user_id = $user_id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTalent()
-    {
-        return $this->talent;
     }
 
     /**
@@ -79,19 +88,19 @@ class User
     }
 
     /**
-     * @return mixed
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
      * @param mixed $email
      */
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    public function jsonSerialize()
+    {
+        return array('user_id'=> $this->getUserId(),
+                     'email'=> $this->getEmail(),
+                     'talent'=>$this->getTalent(),
+                    );
     }
 }
 
