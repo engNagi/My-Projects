@@ -73,4 +73,23 @@ class TaskServiceTest extends TestCase {
             ['US', 'test-us.docx'],
         ];
     }
+
+    public function test_sortDocumentsByLanguage_returnsUnmatchedDocs() {
+        $document1 = new Document();
+        $document1->setFilename('BR.pdf');
+
+        $document2 = new Document();
+        $document2->setFilename('MX.pdf');
+
+        $this->assertEquals(
+            [
+                'MX' => [$document2],
+                '--' => [$document1]
+            ],
+            $this->service->sortDocumentsByLanguage(
+                [$document1, $document2],
+                ['MX']
+            )
+        );
+    }
 }
