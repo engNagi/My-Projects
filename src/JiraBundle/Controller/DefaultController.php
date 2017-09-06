@@ -10,15 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DefaultController extends Controller
 {
-    /**
-     * @Route("/getUsers", name="users_overview")
-     */
-    public function getUsersAction()
-    {
-        return $this->render(
-            'users/users.html.twig'
-        );
-    }
 
     /**
      * @Route("/", name="tasks_overview")
