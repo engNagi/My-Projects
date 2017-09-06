@@ -3,6 +3,7 @@
 namespace JiraBundle\Controller;
 use JiraBundle\Entity\Document;
 use JiraBundle\Entity\Task;
+use JiraBundle\Entity\User;
 use JiraBundle\Repository\DocumentRepository;
 use JiraBundle\Service\TaskService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -70,6 +71,10 @@ class DefaultController extends Controller
     {
         $documents = $this->getDoctrine()
             ->getRepository(Document::class)
+            ->getByTask($id);
+
+        $users = $this->getDoctrine()
+            ->getRepository(User::class)
             ->getByTask($id);
 
         $languages = $this->getDoctrine()

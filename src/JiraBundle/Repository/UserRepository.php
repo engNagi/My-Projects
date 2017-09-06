@@ -1,6 +1,7 @@
 <?php
 
 namespace JiraBundle\Repository;
+
 use JiraBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
@@ -15,7 +16,18 @@ class UserRepository extends EntityRepository
     /**
      * @return User[]
      */
-    public function getAll() {
+    public function getAll()
+    {
         return $this->getEntityManager()->getRepository(User::class)->findAll();
+    }
+
+    /**
+     * @param $taskId
+     * @return User[]
+     */
+    public function getByTask($taskId)
+    {
+        $users = $this->getEntityManager()->getRepository(User::class);
+        return $users->findBy(array('task_id'=>$taskId));
     }
 }
