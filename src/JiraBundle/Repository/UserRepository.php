@@ -34,8 +34,8 @@ class UserRepository extends EntityRepository
     /**
      * @return User|null
      */
-    public function getByUserId($user_id)
+    public function getByUserId($user_id,$task_id)
     {
-        return $this->getEntityManager()->getRepository(User::class)->find($user_id);
+        return $this->getEntityManager()->getRepository(User::class)->find(array("user_id"=>$user_id,"task_id" => $task_id));
     }
 }

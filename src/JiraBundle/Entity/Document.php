@@ -146,7 +146,7 @@ class Document
      * @ORM\OneToOne(targetEntity="User")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="author", referencedColumnName="user_id"),
-     *   @ORM\JoinColumn(name="document_id", referencedColumnName="document_id")
+     *   @ORM\JoinColumn(name="task_id", referencedColumnName="task_id")
      * })
      */
     private $documentToUser;

@@ -16,7 +16,7 @@
             </tr>
             <tr>
                 <td><b>Creator</b>:</td>
-                <td><span class="js_user_preview" data-user-id="{{ task.getUserId }}">{{ task.getUserId() }}</span></td>
+                <td><span class="js_user_preview" data-user-id="{{ task.getUserId }}" data-task-id="{{ task.getTaskId }}">{{ task.getAuthor().getTalent() }}</span></td>
                 <td><b>Original Document Id</b>:</td>
                 <td>{{ task.getOriginalDocumentId() }}</td>
             </tr>
@@ -45,7 +45,8 @@
                 <td>{{ document.getCreateDate() }}</td>
                 <td>
                     <img align="left" width="16" height="16" src="#" style="margin-right:10px;">
-                    <span class="js_user_preview" data-user-id="{{ document.getAuthor }}">{{ document.getAuthor }}</span></td>
+                    <span class="js_user_preview" data-user-id="{{ document.getAuthor }}" data-task-id="{{ document.getTaskId }}">{{ document.getDocumentToUser.getTalent }}</span>
+                </td>
             </tr>
             {% endfor %}
         {% endfor %}

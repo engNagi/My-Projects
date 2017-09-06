@@ -18,6 +18,7 @@ class User implements \JsonSerializable
 
     /**
      * @ORM\Column(type="string")
+     * @ORM\Id
      */
     private $task_id;
 

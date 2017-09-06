@@ -99,16 +99,16 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/getUser/{id}", name="user_detail")
+     * @Route("/getUser/{id}/{task}", name="user_detail")
      * @param $id
      * @return Response
      */
-    public function getUsersDetailAction($id)
+    public function getUsersDetailAction($id,$task)
     {
         /** @var User $user */
         $user = $this->getDoctrine()
             ->getRepository(User::class)
-            ->getByUserId($id);
+            ->getByUserId($id,$task);
 
         return new JsonResponse($user);
     }

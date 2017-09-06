@@ -9,8 +9,9 @@
 
     $(".js_user_preview").click(function () {
 
-        var user_id = $(this).data('user-id');
-        var url_string = '/getUser/'+ user_id;
+        var task_id = $(this).data('task-id'),
+            user_id = $(this).data('user-id'),
+            url_string = '/getUser/'+ user_id + '/' + task_id;
 
         $.ajax({
             type: "GET",
