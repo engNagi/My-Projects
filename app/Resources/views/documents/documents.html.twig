@@ -13,7 +13,7 @@
         <tr>
             <th><a href="{{ document.getUrl }}" target="_blank">{{ document.getFilename }}</a></th>
             <td>{{ document.getCreateDate|date("Y-m-d H:i:s") }}</td>
-            <td>{{ document.getAuthor }}</td>
+            <td><span class="js_user_preview" data-user-id="{{ document.getAuthor }}">{{ document.getAuthor() }}</span></td>
         </tr>
         {% endfor %}
         </tbody>

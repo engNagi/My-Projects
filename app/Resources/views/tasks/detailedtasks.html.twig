@@ -4,21 +4,21 @@
         <table class="table">
             <tr>
                 <th style="width: 10%;">Title:</th>
-                <td style="width: 30%;">Translation of the tHM PRO Playbook</td>
+                <td style="width: 30%;">{{ task.getTitle() }}</td>
                 <td style="width: 20%;"><b>Date</b>:</td>
-                <td style="width: 40%;">2017-05-24 11:19:59</td>
+                <td style="width: 40%;">{{ task.getTasksDate() }}</td>
             </tr>
             <tr>
                 <td><b>Languages</b>:</td>
-                <td>MX,PL,RU,TR</td>
+                <td>{{ task.getLanguages() }}</td>
                 <td><b>Status</b>:</td>
-                <td>Done</td>
+                <td>{{ task.getState() }}</td>
             </tr>
             <tr>
                 <td><b>Creator</b>:</td>
-                <td class="js_user_preview" >Andrew Marcione</td>
+                <td><span class="js_user_preview" data-user-id="{{ task.getUserId }}">{{ task.getUserId() }}</span></td>
                 <td><b>Original Document Id</b>:</td>
-                <td>470043</td>
+                <td>{{ task.getOriginalDocumentId() }}</td>
             </tr>
             <tr>
                 <td><b>Team-members</b>:</td>
@@ -43,7 +43,9 @@
                 <td>{% if loop.first %}{{ language }}{% endif %}</td>
                 <td>{{ document.getFilename() }}</td>
                 <td>{{ document.getCreateDate() }}</td>
-                <td><span class="js_user_preview">{{ document.getAuthor() }}</span></td>
+                <td>
+                    <img align="left" width="16" height="16" src="#" style="margin-right:10px;">
+                    <span class="js_user_preview" data-user-id="{{ document.getAuthor }}">{{ document.getAuthor }}</span></td>
             </tr>
             {% endfor %}
         {% endfor %}

@@ -9,18 +9,23 @@
 
     $(".js_user_preview").click(function () {
 
-        var user_id = $(this).html();
+        var user_id = $(this).data('user-id');
         var url_string = '/getUser/'+ user_id;
 
         $.ajax({
             type: "GET",
             url: url_string,
             success: function(result){
-                var talent = result.talent;
-                $('#myModal .modal-title').html(result.talent);
+                $('#myModal .modal-title').html(result.talent)
+                $('#myModal .modal-body').html(
+
+                    '<img class="js_document_preview" align="left" width="48" height="48" src="' +
+                    result.avatarUrl +
+                    '" style="margin-right:10px;">' +
+                    '<div>Email: ' + result.email + '</div>' +
+                    '<div>Slack: @' + result.user_id + '</div>');
                 $('#myModal').modal();
             }
         });
-
     })
 })(jQuery);
