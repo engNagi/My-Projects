@@ -95,6 +95,11 @@ class User implements \JsonSerializable
         $this->email = $email;
     }
 
+    public function getUserAvatarUrl()
+    {
+     return "https://tasks.trivago.com/secure/useravatar?size=medium&ownerId=".$this->getUserId();
+    }
+
     public function jsonSerialize()
     {
         return array('user_id'=> $this->getUserId(),
