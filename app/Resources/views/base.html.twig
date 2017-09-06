@@ -7,14 +7,13 @@
             <link href="{{ asset('assets/css/main.css') }}" type="text/css" rel="stylesheet" />
             <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}" />
             <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-theme.min.css') }}" />
+            <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
             {#<link rel="stylesheet" href="{{ asset('assets/css/bootstrap-superhero.min.css') }}" />#}
         {% endblock %}
     </head>
     <body>
-
     <div class="navbar-wrapper">
         <div class="container-fluid">
-
             <nav class="navbar navbar-default navbar-static-top">
                 <div class="container-fluid">
                     <div class="navbar-header">
@@ -34,7 +33,6 @@
                     </div>
                 </div>
             </nav>
-
         </div>
     </div>
 
@@ -59,6 +57,8 @@
         <script src="{{ asset('assets/js/jquery-1.12.4.min.js') }}" /></script>
         <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('assets/js/translations.js') }}"></script>
+        <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
     {% endblock %}
     </body>
 </html>

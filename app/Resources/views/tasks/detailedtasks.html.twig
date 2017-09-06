@@ -27,7 +27,7 @@
         </table>
     </div>
 
-    <table class="table table-striped">
+    <table class="table table-striped" id="translationsTable"  data-order='[[ 0, "desc" ]]'>
         <thead class="thead-default">
         <tr>
             <th style="width: 5%;">Languages</th>
@@ -40,7 +40,7 @@
         {% for language,documents in translatedDocuments %}
             {% for document in documents %}
             <tr>
-                <td>{% if loop.first %}{{ language }}{% endif %}</td>
+                <td>{{ language }}</td>
                 <td>{{ document.getFilename() }}</td>
                 <td>{{ document.getCreateDate() }}</td>
                 <td>

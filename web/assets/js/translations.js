@@ -29,4 +29,11 @@
             }
         });
     })
+    $(document).ready(function(){
+        $('#translationsTable').DataTable({
+            paging: false,
+            //searching: false
+            });
+    });
+
 })(jQuery);
