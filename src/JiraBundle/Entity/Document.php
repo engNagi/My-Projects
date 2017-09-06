@@ -12,7 +12,6 @@ class Document
 {
     /**
      * @var int
-     *
      * @ORM\Column(type="integer")
      * @ORM\Id
      */
@@ -143,7 +142,21 @@ class Document
         $this->task_id = $task_id;
     }
 
+    /**
+     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="author", referencedColumnName="user_id"),
+     *   @ORM\JoinColumn(name="document_id", referencedColumnName="document_id")
+     * })
+     */
+    private $documentToUser;
 
-
+    /**
+     * @return mixed
+     */
+    public function getDocumentToUser()
+    {
+        return $this->documentToUser;
+    }
 }
 
