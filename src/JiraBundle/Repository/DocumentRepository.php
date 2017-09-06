@@ -10,7 +10,8 @@ class DocumentRepository extends EntityRepository
     /**
      * @return Document[]
      */
-    public function getAll() {
+    public function getAll()
+    {
         return $this->getEntityManager()->getRepository(Document::class)->findAll();
     }
 
@@ -27,7 +28,8 @@ class DocumentRepository extends EntityRepository
      * @param $taskId
      * @return Document[]
      */
-    public function getByTask($taskId){
+    public function getByTask($taskId)
+    {
         $documents = $this->getEntityManager()->getRepository(Document::class);
         return $documents->findBy(array('task_id'=>$taskId));
     }

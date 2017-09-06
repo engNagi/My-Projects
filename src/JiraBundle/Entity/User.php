@@ -5,26 +5,42 @@ namespace JiraBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * User
- *
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="JiraBundle\Repository\UserRepository")
  */
 class User
 {
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string")
      * @ORM\Id
-     */private $user_id;
+     */
+    private $user_id;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $task_id;
+
+    /**
+     * @return mixed
+     */
+    public function getTaskId()
+    {
+        return $this->task_id;
+    }
+
+    /**
+     * @param mixed $task_id
+     */
+    public function setTaskId($task_id)
+    {
+        $this->task_id = $task_id;
+    }
+
     /**
      * @ORM\Column(type="string")
      */
     private $talent;
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $role;
     /**
      * @ORM\Column(type="string")
      */
@@ -60,22 +76,6 @@ class User
     public function setTalent($talent)
     {
         $this->talent = $talent;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRole()
-    {
-        return $this->role;
-    }
-
-    /**
-     * @param mixed $role
-     */
-    public function setRole($role)
-    {
-        $this->role = $role;
     }
 
     /**

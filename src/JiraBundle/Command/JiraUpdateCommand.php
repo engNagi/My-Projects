@@ -40,7 +40,7 @@ class JiraUpdateCommand extends ContainerAwareCommand
 
         if ($decodedResults->total > 0)
         {
-            $users = [];
+
             foreach ( $decodedResults->issues as $issue )
             {
                 $output->writeln('processing ' . $issue->key);
@@ -50,6 +50,8 @@ class JiraUpdateCommand extends ContainerAwareCommand
                 $issue = json_decode($result);
                 $originalDocument = $this->getOriginalDocument($issue);
 
+                $users = [];
+
                 $task = new Task();
                 $task->setTaskId($issue->key);
                 $task->setTasksDate(date('Y-m-d H:i:s', strtotime($issue->fields->created)));
@@ -57,7 +59,8 @@ class JiraUpdateCommand extends ContainerAwareCommand
                 $task->setOriginalDocumentId($originalDocument->getDocumentId());
                 $task->setTitle($issue->fields->summary);
                 $task->setState($issue->fields->status->name);
-                $task->setUserId($issue->fields->creator->displayName);
+                $task->setUserId($issue->fields->creator->key);
+
                 $em->persist($task);
 
                 try
@@ -102,6 +105,7 @@ class JiraUpdateCommand extends ContainerAwareCommand
                             $user->setUserId($issue->fields->assignee->key);
                             $user->setEmail($issue->fields->assignee->emailAddress);
                             $user->setTalent($issue->fields->assignee->displayName);
+                            $user->setTaskId($issue->key);
                             $users[$user->getUserId()] = $user;
                         }
 
@@ -111,6 +115,7 @@ class JiraUpdateCommand extends ContainerAwareCommand
                             $user->setUserId($issue->fields->creator->key);
                             $user->setEmail($issue->fields->creator->emailAddress);
                             $user->setTalent($issue->fields->creator->displayName);
+                            $user->setTaskId($issue->key);
                             $users[$user->getUserId()] = $user;
                         }
 
@@ -120,6 +125,7 @@ class JiraUpdateCommand extends ContainerAwareCommand
                             $user->setUserId($issue->fields->reporter->key);
                             $user->setEmail($issue->fields->reporter->emailAddress);
                             $user->setTalent($issue->fields->reporter->displayName);
+                            $user->setTaskId($issue->key);
                             $users[$user->getUserId()] = $user;
                         }
 
@@ -131,20 +137,17 @@ class JiraUpdateCommand extends ContainerAwareCommand
                                 $user->setUserId($comment->author->key);
                                 $user->setEmail($comment->author->emailAddress);
                                 $user->setTalent($comment->author->displayName);
+                                $user->setTaskId($issue->key);
                                 $users[$user->getUserId()] = $user;
                             }
                         }
                     }
                 }
-
-                $em->flush();
-
+                foreach ($users as $user)
+                {
+                    $em->persist($user);
+                }
             }
-
-            foreach ($users as $user) {
-                $em->persist($user);
-            }
-
             $em->flush();
             $output->writeln('Command result.');
         }
