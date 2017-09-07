@@ -16,7 +16,7 @@
             </tr>
             <tr>
                 <td><b>Creator</b>:</td>
-                <td><span class="js_user_preview" data-user-id="{{ task.getUserId }}" data-task-id="{{ task.getTaskId }}">{{ task.getAuthor.getTalent }}</span></td>
+                <td><span class="js_user_preview" data-user-id="{{ task.getUserId }}" data-task-id="{{ task.getTaskId }}">{{ task.getAuthor().getTalent() }}</span></td>
                 <td><b>Original Document</b>:</td>
                 <td>
                     <img class="js_document_preview" align="left" width="64" height="64" src="{{ path('task_image', {'id':task.getTaskId()}) }}" style="margin-right:10px;">
