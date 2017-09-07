@@ -33,6 +33,7 @@ class DefaultController extends Controller
             $taskToDocument[$task->getTaskId()] = $documentRepository->getById($task->getOriginalDocumentId());
         }
 
+
         return $this->render(
             'tasks/tasks.html.twig',
             [
@@ -79,6 +80,11 @@ class DefaultController extends Controller
             ->getRepository(User::class)
             ->getByTask($id);
 
+        $document = $this->getDoctrine()
+            ->getRepository(Document::class)
+            ->getById($task->getOriginalDocumentId());
+
+
         $service = new TaskService();
 
         $matchedDocuments = $service->sortDocumentsByLanguage($documents,$languages);
@@ -89,7 +95,8 @@ class DefaultController extends Controller
             [
                 'translatedDocuments' => array_merge($matchedDocuments, $possibleMatches),
                 'task' => $task,
-                'users' => $users
+                'users' => $users,
+                'originalDocument' => $document
             ]
         );
     }

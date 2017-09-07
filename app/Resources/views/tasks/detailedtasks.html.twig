@@ -17,14 +17,21 @@
             <tr>
                 <td><b>Creator</b>:</td>
                 <td><span class="js_user_preview" data-user-id="{{ task.getUserId }}" data-task-id="{{ task.getTaskId }}">{{ task.getAuthor().getTalent() }}</span></td>
-                <td><b>Original Document Id</b>:</td>
-                <td>{{ task.getOriginalDocumentId() }}</td>
-            </tr>
-            <tr>
-                <td><b>Team-members</b>:</td>
-                <td>Andrew Marcione,Andrew Marcione,Andrew Marcione,Andrew Marcione</td>
+                <td><b>Original Document</b>:</td>
+                <td>
+                    <img class="js_document_preview" align="left" width="64" height="64" src="{{ path('task_image', {'id':task.getTaskId()}) }}" style="margin-right:10px;">
+                    <a href="{{ originalDocument.getUrl() }}" target="_blank">{{ originalDocument.getFilename() }}</a>
+                </td>
             </tr>
         </table>
+        <h3 class="team-members-header">Team-members:</h3>
+        <div class="row">
+            {% for user in users %}
+                <div class="col-md-1" >
+                    <span style="" class="js_user_preview" data-user-id="{{ user.getUserId }}" data-task-id="{{ user.getTaskId }}">{{ user.getTalent }}</span>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
     <table class="table table-striped" id="translationsTable"  data-order='[[ 0, "desc" ]]'>
@@ -41,7 +48,7 @@
             {% for document in documents %}
             <tr>
                 <td>{{ language }}</td>
-                <td>{{ document.getFilename() }}</td>
+                <th><a href="{{ document.getUrl }}" target="_blank">{{ document.getFilename }}</a></th>
                 <td>{{ document.getCreateDate() }}</td>
                 <td>
                     <img align="left" width="16" height="16" src="#" style="margin-right:10px;">
