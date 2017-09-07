@@ -4,6 +4,18 @@ LIMIT 0, 1000
 
 -- Date: 2017-09-07 16:43
 */
+CREATE TABLE `document` (
+  `document_id` int(11) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `create_date` datetime NOT NULL,
+  `task_id` varchar(255) DEFAULT NULL,
+  `author` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`document_id`),
+  UNIQUE KEY `document_id_UNIQUE` (`document_id`),
+  UNIQUE KEY `url_UNIQUE` (`url`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 INSERT INTO `document` (`document_id`,`filename`,`url`,`create_date`,`task_id`,`author`) VALUES (464905,'DSG-9812_PRO_Playbook_US_V17.pdf','https://tasks.trivago.com/secure/attachment/464905/DSG-9812_PRO_Playbook_US_V17.pdf','2017-05-24 11:05:41','XCNT-1833','amarcione');
 INSERT INTO `document` (`document_id`,`filename`,`url`,`create_date`,`task_id`,`author`) VALUES (471819,'pl_PL_DSG-11955_PRO-Playbook_PL_MARKEDUP.pdf','https://tasks.trivago.com/secure/attachment/471819/pl_PL_DSG-11955_PRO-Playbook_PL_MARKEDUP.pdf','2017-06-15 16:01:28','XCNT-1833','ecaschera');
 INSERT INTO `document` (`document_id`,`filename`,`url`,`create_date`,`task_id`,`author`) VALUES (472022,'DSG-11955_PRO-Playbook_PL.pdf','https://tasks.trivago.com/secure/attachment/472022/DSG-11955_PRO-Playbook_PL.pdf','2017-06-16 11:15:17','XCNT-1833','fhuettenhoff');
