@@ -24,13 +24,31 @@
                 </td>
             </tr>
         </table>
-        <h3 class="team-members-header">Team-members:</h3>
-        <div class="row">
-            {% for user in users %}
-                <div class="col-md-1" >
-                    <span style="" class="js_user_preview" data-user-id="{{ user.getUserId }}" data-task-id="{{ user.getTaskId }}">{{ user.getTalent }}</span>
-                </div>
+
+        <div>
+            <h3 class="team-members-header">Team-members:</h3>
+            <div class="row">
+                {% for user in users %}
+                    <div class="col-md-1" >
+                        <span style="" class="js_user_preview" data-user-id="{{ user.getUserId }}" data-task-id="{{ user.getTaskId }}">{{ user.getTalent }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            <h3>Current documents:</h3>
+            <div class="row">
+            {% for language,documents in translatedDocuments %}
+                {% for document in documents %}
+                    {% if loop.last and language != '--' %}
+                        <div class="col-sm-1"><span class="label label-info">{{ language }}</span></div>
+                        <div class="col-sm-2">{{ document.getCreateDate }}</div>
+                        <div class="col-sm-9"><a href="{{ document.getUrl }}" target="_blank">{{ document.getFilename }}</a></div>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
+            </div>
         </div>
     </div>
 
