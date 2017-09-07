@@ -2,8 +2,8 @@
 
 namespace JiraBundle\Controller;
 use GuzzleHttp\Psr7\Response;
-use JiraBundle\Entity\Document;
-use JiraBundle\Entity\Task;
+use JiraBundle\Entity\DocumentWithUser;
+use JiraBundle\Entity\TaskWithUser;
 use JiraBundle\Entity\User;
 use JiraBundle\Repository\DocumentRepository;
 use JiraBundle\Service\TaskService;
@@ -21,10 +21,10 @@ class DefaultController extends Controller
     public function getTasksAction()
     {
         /** @var DocumentRepository $documentRepository */
-        $documentRepository = $this->getDoctrine()->getRepository(Document::class);
+        $documentRepository = $this->getDoctrine()->getRepository(DocumentWithUser::class);
 
         $tasks = $this->getDoctrine()
-            ->getRepository(Task::class)
+            ->getRepository(TaskWithUser::class)
             ->getAll();
 
         $taskToDocument = [];
@@ -57,7 +57,7 @@ class DefaultController extends Controller
             'documents/documents.html.twig',
             [
                 'documents' => $this->getDoctrine()
-                    ->getRepository(Document::class)
+                    ->getRepository(DocumentWithUser::class)
                     ->getAll()
             ]
         );
@@ -69,7 +69,7 @@ class DefaultController extends Controller
     public function getTasksDetailAction($id)
     {
         $task = $this->getDoctrine()
-            ->getRepository(Task::class)
+            ->getRepository(TaskWithUser::class)
             ->find($id);
 
         $users = $this->getDoctrine()
@@ -77,7 +77,7 @@ class DefaultController extends Controller
             ->getByTask($id);
 
         $document = $this->getDoctrine()
-            ->getRepository(Document::class)
+            ->getRepository(DocumentWithUser::class)
             ->getById($task->getOriginalDocumentId());
 
 
@@ -117,11 +117,11 @@ class DefaultController extends Controller
     private function getTranslatedDocument($id)
     {
         $documents = $this->getDoctrine()
-        ->getRepository(Document::class)
+        ->getRepository(DocumentWithUser::class)
         ->getByTask($id);
 
         $languages = $this->getDoctrine()
-            ->getRepository(Task::class)
+            ->getRepository(TaskWithUser::class)
             ->find($id)
             ->getLanguagesAsArray();
 

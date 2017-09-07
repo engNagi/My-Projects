@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace JiraBundle\Entity;
 
-use JiraBundle\Entity\Document;
 use PHPUnit\Framework\TestCase;
 
 class TaskTest extends TestCase

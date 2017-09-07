@@ -5,13 +5,28 @@ namespace JiraBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Task
- *
  * @ORM\Table(name="tasks")
  * @ORM\Entity(repositoryClass="JiraBundle\Repository\TaskRepository")
  */
-class Task
+class TaskWithUser
 {
+    /**
+     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="user_id"),
+     *   @ORM\JoinColumn(name="task_id", referencedColumnName="task_id")
+     * })
+     */
+    private $author;
+
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
     /**
      * @ORM\Column(type="string")
      * @ORM\Column(unique=true)
@@ -171,5 +186,4 @@ class Task
     {
         $this->task_id = $task_id;
     }
-
 }

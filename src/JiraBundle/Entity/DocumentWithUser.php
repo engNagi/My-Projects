@@ -8,8 +8,25 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="document")
  * @ORM\Entity(repositoryClass="JiraBundle\Repository\DocumentRepository")
  */
-class Document
+class DocumentWithUser
 {
+    /**
+     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="author", referencedColumnName="user_id"),
+     *   @ORM\JoinColumn(name="task_id", referencedColumnName="task_id")
+     * })
+     */
+    private $documentToUser;
+
+    /**
+     * @return mixed
+     */
+    public function getDocumentToUser()
+    {
+        return $this->documentToUser;
+    }
+
     /**
      * @var int
      * @ORM\Column(type="integer")

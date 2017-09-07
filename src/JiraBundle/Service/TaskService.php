@@ -2,12 +2,12 @@
 
 namespace JiraBundle\Service;
 
-use JiraBundle\Entity\Document;
+use JiraBundle\Entity\DocumentWithUser;
 
 class TaskService
 {
     /**
-     * @param Document[] $documents
+     * @param DocumentWithUser[] $documents
      * @param array $languages
      * @return array
      */
