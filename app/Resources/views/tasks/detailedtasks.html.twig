@@ -16,7 +16,9 @@
             </tr>
             <tr>
                 <td><b>Creator</b>:</td>
-                <td><span class="js_user_preview" data-user-id="{{ task.getUserId }}" data-task-id="{{ task.getTaskId }}">{{ task.getAuthor().getTalent() }}</span></td>
+                <td>
+                    <img align="left" width="16" height="16" src="{{ originalDocument.getDocumentToUser.getUserAvatarUrl }}" style="margin-right:10px;">
+                    <span class="js_user_preview" data-user-id="{{ task.getUserId }}" data-task-id="{{ task.getTaskId }}">{{ task.getAuthor().getTalent() }}</span></td>
                 <td><b>Original Document</b>:</td>
                 <td>
                     <img class="js_document_preview" align="left" width="64" height="64" src="{{ path('task_image', {'id':task.getTaskId()}) }}" style="margin-right:10px;">
@@ -29,7 +31,8 @@
             <h3 class="team-members-header">Team-members:</h3>
             <div class="row">
                 {% for user in users %}
-                    <div class="col-md-1" >
+                    <div class="col-lg-2" >
+                        <img align="left" width="32" height="32" src="{{ user.getUserAvatarUrl }}" style="margin-right:10px;">
                         <span style="" class="js_user_preview" data-user-id="{{ user.getUserId }}" data-task-id="{{ user.getTaskId }}">{{ user.getTalent }}</span>
                     </div>
                 {% endfor %}
@@ -69,7 +72,7 @@
                 <th><a href="{{ document.getUrl }}" target="_blank">{{ document.getFilename }}</a></th>
                 <td>{{ document.getCreateDate() }}</td>
                 <td>
-                    <img align="left" width="16" height="16" src="#" style="margin-right:10px;">
+                    <img align="left" width="16" height="16" src="{{ document.getDocumentToUser.getUserAvatarUrl }}" style="margin-right:10px;">
                     <span class="js_user_preview" data-user-id="{{ document.getAuthor }}" data-task-id="{{ document.getTaskId }}">{{ document.getDocumentToUser.getTalent }}</span>
                 </td>
             </tr>
