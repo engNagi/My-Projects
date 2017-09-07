@@ -128,7 +128,8 @@ class DefaultController extends Controller
         $service = new TaskService();
         $matchedDocuments = $service->sortDocumentsByRequestedLanguage($documents,$languages);
         $isoMatches = $service->sortDocumentsByIsoCode($matchedDocuments['--']);
-        $looseMatches = $service->sortDocumentsMock($matchedDocuments['--']);
+        //$looseMatches = $service->sortDocumentsMock($matchedDocuments['--']);
+$looseMatches = [];
 
         return array_merge($matchedDocuments, $isoMatches, $looseMatches);
     }
