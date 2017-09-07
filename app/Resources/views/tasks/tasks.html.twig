@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <table class="table table-striped" id="translationsTable" data-order='[[ 6, "desc" ]]'>
+    <table class="table table-striped data-table" data-order='[[ 6, "desc" ]]'>
         <thead class="thead-default">
         <tr>
             <th>Task Id</th>
@@ -16,11 +16,25 @@
         {% for task in tasks %}
             {% set document = taskToDocument[task.getTaskId()] %}
             <tr>
-                <th><a href="{{ path('task_detail', {'id':task.getTaskId()}) }}">{{ task.getTaskId() }}</a></th>
+                <th><a href="{{ path('task_detail', {'id':task.getTaskId}) }}">{{ task.getTaskId() }}</a></th>
                 <td>{{ task.getTitle() }}</td>
-                <td>{{ task.getLanguages() }}</td>
-                <td><span class="js_user_preview" data-user-id="{{ task.getUserId }}" data-task-id="{{ task.getTaskId }}">{{ task.getAuthor().getTalent() }}</span></td>
-                <td>{{ task.getTasksDate() }}</td>
+                <td>
+                    {% for language in task.getLanguagesAsArray %}
+                        {% if translatedDocuments[task.getTaskId][language] is empty %}
+                            {% set class = 'danger' %}
+                        {% else %}
+                            {% set class = 'info' %}
+                        {% endif %}
+                        <span class="label label-{{ class }}">{{ language }}</span>
+                    {% endfor %}
+                    {% for language, documents in translatedDocuments[task.getTaskId] %}
+                        {% if language not in task.getLanguagesAsArray and language != '--' %}
+                            <span class="label label-primary">{{ language }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td><span class="js_user_preview" data-user-id="{{ task.getUserId }}" data-task-id="{{ task.getTaskId }}">{{ task.getAuthor.getTalent }}</span></td>
+                <td>{{ task.getTasksDate }}</td>
                 <td>
                     <img class="js_document_preview" align="left" width="64" height="64" src="{{ path('task_image', {'id':task.getTaskId()}) }}" style="margin-right:10px;">
                     <a href="{{ document.getUrl() }}" target="_blank">{{ document.getFilename() }}</a>

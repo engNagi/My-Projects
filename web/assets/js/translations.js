@@ -1,9 +1,7 @@
 ;(function ($) {
     $(".js_document_preview").click(function() {
         var url = $(this).attr('src');
-
         $('#myModal .modal-body').html('<img class="img-responsive" src="' + url + '">');
-
         $('#myModal').modal();
     });
 
@@ -29,11 +27,11 @@
             }
         });
     })
-    $(document).ready(function(){
-        $('#translationsTable').DataTable({
-            paging: false,
-            //searching: false
-            });
+
+    $(document).ready(function() {
+        $('.data-table').dataTable({
+            paging: false
+        });
     });
 
 })(jQuery);
