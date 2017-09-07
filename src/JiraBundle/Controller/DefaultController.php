@@ -28,9 +28,12 @@ class DefaultController extends Controller
             ->getAll();
 
         $taskToDocument = [];
+        $collectedDocument = [];
         foreach ($tasks as $task )
         {
             $taskToDocument[$task->getTaskId()] = $documentRepository->getById($task->getOriginalDocumentId());
+            $collectedDocument[$task->getTaskId()] =$this->getTranslatedDocument($task->getTaskId());
+
         }
 
         return $this->render(
@@ -38,6 +41,8 @@ class DefaultController extends Controller
             [
                 'tasks' => $tasks,
                 'taskToDocument' => $taskToDocument,
+                'translatedDocuments' => $collectedDocument
+
             ]
         );
     }
@@ -62,15 +67,6 @@ class DefaultController extends Controller
      */
     public function getTasksDetailAction($id)
     {
-        $documents = $this->getDoctrine()
-            ->getRepository(Document::class)
-            ->getByTask($id);
-
-        $languages = $this->getDoctrine()
-            ->getRepository(Task::class)
-            ->find($id)
-            ->getLanguagesAsArray();
-
         $task = $this->getDoctrine()
             ->getRepository(Task::class)
             ->find($id);
@@ -79,15 +75,10 @@ class DefaultController extends Controller
             ->getRepository(User::class)
             ->getByTask($id);
 
-        $service = new TaskService();
-
-        $matchedDocuments = $service->sortDocumentsByLanguage($documents,$languages);
-        $possibleMatches = $service->tryToSort($matchedDocuments['--']);
-
         return $this->render(
             'tasks/detailedtasks.html.twig',
             [
-                'translatedDocuments' => array_merge($matchedDocuments, $possibleMatches),
+                'translatedDocuments' => $this->getTranslatedDocument($id),
                 'task' => $task,
                 'users' => $users
             ]
@@ -116,4 +107,23 @@ class DefaultController extends Controller
         return new JsonResponse($user);
     }
 
+    private function getTranslatedDocument($id)
+    {
+        $documents = $this->getDoctrine()
+        ->getRepository(Document::class)
+        ->getByTask($id);
+
+        $languages = $this->getDoctrine()
+            ->getRepository(Task::class)
+            ->find($id)
+            ->getLanguagesAsArray();
+
+        $service = new TaskService();
+        $matchedDocuments = $service->sortDocumentsByLanguage($documents,$languages);
+        $possibleMatches = $service->tryToSort($matchedDocuments['--']);
+
+        return array_merge($matchedDocuments, $possibleMatches);
+    }
 }
+
+
