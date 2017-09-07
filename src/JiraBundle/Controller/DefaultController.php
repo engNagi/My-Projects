@@ -36,6 +36,7 @@ class DefaultController extends Controller
 
         }
 
+
         return $this->render(
             'tasks/tasks.html.twig',
             [
@@ -75,12 +76,18 @@ class DefaultController extends Controller
             ->getRepository(User::class)
             ->getByTask($id);
 
+        $document = $this->getDoctrine()
+            ->getRepository(Document::class)
+            ->getById($task->getOriginalDocumentId());
+
+
         return $this->render(
             'tasks/detailedtasks.html.twig',
             [
                 'translatedDocuments' => $this->getTranslatedDocument($id),
                 'task' => $task,
-                'users' => $users
+                'users' => $users,
+                'originalDocument' => $document
             ]
         );
     }
