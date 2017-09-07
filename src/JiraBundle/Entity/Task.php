@@ -5,8 +5,6 @@ namespace JiraBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Task
- *
  * @ORM\Table(name="tasks")
  * @ORM\Entity(repositoryClass="JiraBundle\Repository\TaskRepository")
  */
@@ -14,7 +12,6 @@ class Task
 {
     /**
      * @ORM\Column(type="string")
-     * @ORM\Column(unique=true)
      * @ORM\Id
      */
     private $task_id;
@@ -50,7 +47,7 @@ class Task
     private $user_id;
 
     /**
-     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\OneToOne(targetEntity="User", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="user_id", referencedColumnName="user_id"),
      *   @ORM\JoinColumn(name="task_id", referencedColumnName="task_id")
@@ -64,6 +61,14 @@ class Task
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setAuthor(User $user)
+    {
+        $this->author = $user;
     }
 
     /**

@@ -114,6 +114,10 @@ class DefaultController extends Controller
         return new JsonResponse($user);
     }
 
+    /**
+     * @param int $id
+     * @return array
+     */
     private function getTranslatedDocument($id)
     {
         $documents = $this->getDoctrine()

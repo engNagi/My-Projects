@@ -61,8 +61,6 @@ class JiraUpdateCommand extends ContainerAwareCommand
                 $task->setState($issue->fields->status->name);
                 $task->setUserId($issue->fields->creator->key);
 
-                $em->persist($task);
-
                 try
                 {
                     $url = 'http://192.168.44.92/rest/api/latest/attachment/' . $issue->key . '/' . str_replace(' ', '%20', $originalDocument->getFilename());
@@ -87,6 +85,55 @@ class JiraUpdateCommand extends ContainerAwareCommand
                     $output->writeln($exception->getMessage());
                 }
 
+                if ($issue->fields->creator)
+                {
+                    $user = new User();
+                    $user->setUserId($issue->fields->creator->key);
+                    $user->setEmail($issue->fields->creator->emailAddress);
+                    $user->setTalent($issue->fields->creator->displayName);
+                    $user->setTaskId($issue->key);
+                    $task->setAuthor($user);
+                }
+
+                if ($issue->fields->assignee)
+                {
+                    $user = new User();
+                    $user->setUserId($issue->fields->assignee->key);
+                    $user->setEmail($issue->fields->assignee->emailAddress);
+                    $user->setTalent($issue->fields->assignee->displayName);
+                    $user->setTaskId($issue->key);
+                    if ($task->getAuthor()->getUserId() != $user->getUserId()) {
+                        $users[$user->getUserId()] = $user;
+                    }
+                }
+
+                if ($issue->fields->reporter)
+                {
+                    $user = new User();
+                    $user->setUserId($issue->fields->reporter->key);
+                    $user->setEmail($issue->fields->reporter->emailAddress);
+                    $user->setTalent($issue->fields->reporter->displayName);
+                    $user->setTaskId($issue->key);
+                    if ($task->getAuthor()->getUserId() != $user->getUserId()) {
+                        $users[$user->getUserId()] = $user;
+                    }
+                }
+
+                if ($issue->fields->comment)
+                {
+                    foreach ($issue->fields->comment->comments as $comment)
+                    {
+                        $user = new User();
+                        $user->setUserId($comment->author->key);
+                        $user->setEmail($comment->author->emailAddress);
+                        $user->setTalent($comment->author->displayName);
+                        $user->setTaskId($issue->key);
+                        if ($task->getAuthor()->getUserId() != $user->getUserId()) {
+                            $users[$user->getUserId()] = $user;
+                        }
+                    }
+                }
+
                 foreach ($issue->fields->attachment as $attachment) {
                     if (!$this->isIdml($attachment->filename)) {
                         $document = new Document();
@@ -98,58 +145,17 @@ class JiraUpdateCommand extends ContainerAwareCommand
                         $document->setDocumentId($attachment->id);
 
                         $em->persist($document);
-
-                        if ($issue->fields->assignee)
-                        {
-                            $user = new User();
-                            $user->setUserId($issue->fields->assignee->key);
-                            $user->setEmail($issue->fields->assignee->emailAddress);
-                            $user->setTalent($issue->fields->assignee->displayName);
-                            $user->setTaskId($issue->key);
-                            $users[$user->getUserId()] = $user;
-                        }
-
-                        if ($issue->fields->creator)
-                        {
-                            $user = new User();
-                            $user->setUserId($issue->fields->creator->key);
-                            $user->setEmail($issue->fields->creator->emailAddress);
-                            $user->setTalent($issue->fields->creator->displayName);
-                            $user->setTaskId($issue->key);
-                            $users[$user->getUserId()] = $user;
-                        }
-
-                        if ($issue->fields->reporter)
-                        {
-                            $user = new User();
-                            $user->setUserId($issue->fields->reporter->key);
-                            $user->setEmail($issue->fields->reporter->emailAddress);
-                            $user->setTalent($issue->fields->reporter->displayName);
-                            $user->setTaskId($issue->key);
-                            $users[$user->getUserId()] = $user;
-                        }
-
-                        if ($issue->fields->comment)
-                        {
-                            foreach ($issue->fields->comment->comments as $comment)
-                            {
-                                $user = new User();
-                                $user->setUserId($comment->author->key);
-                                $user->setEmail($comment->author->emailAddress);
-                                $user->setTalent($comment->author->displayName);
-                                $user->setTaskId($issue->key);
-                                $users[$user->getUserId()] = $user;
-                            }
-                        }
                     }
                 }
+
                 foreach ($users as $user)
                 {
                     $em->persist($user);
                 }
+
+                $em->persist($task);
             }
             $em->flush();
-            $output->writeln('Command result.');
         }
 
         $output->writeln('Success.');
