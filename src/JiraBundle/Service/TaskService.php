@@ -11,7 +11,7 @@ class TaskService
      * @param array $languages
      * @return array
      */
-    public function sortDocumentsByLanguage(array $documents, array $languages)
+    public function sortDocumentsByRequestedLanguage(array $documents, array $languages)
     {
         $sortedDocuments = array_combine($languages, array_pad([], count($languages), []));
         foreach ($documents as $document)
@@ -31,7 +31,11 @@ class TaskService
         return $sortedDocuments;
     }
 
-    public function tryToSort(array $documents)
+    /**
+     * @param array $documents
+     * @return array
+     */
+    public function sortDocumentsByIsoCode(array $documents)
     {
         $matchedDocuments = [
             '--' => []
@@ -48,6 +52,29 @@ class TaskService
                 $matchedDocuments[$matches[2]][] = $document;
             }
         }
+        return $matchedDocuments;
+    }
+
+    /**
+     * @param array $documents
+     * @return array
+     */
+    public function sortDocumentsMock(array $documents)
+    {
+        $matchedDocuments = [
+            '--' => []
+        ];
+
+        foreach ($documents as $document) {
+            $filename = strtolower($document->getFilename());
+
+            if (strpos($filename, 'russia') !== false) {
+                $matchedDocuments['RU'][] = $document;
+            } else {
+                $matchedDocuments['--'][] = $document;
+            }
+        }
+
         return $matchedDocuments;
     }
 }

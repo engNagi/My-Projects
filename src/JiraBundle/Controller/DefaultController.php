@@ -126,10 +126,11 @@ class DefaultController extends Controller
             ->getLanguagesAsArray();
 
         $service = new TaskService();
-        $matchedDocuments = $service->sortDocumentsByLanguage($documents,$languages);
-        $possibleMatches = $service->tryToSort($matchedDocuments['--']);
+        $matchedDocuments = $service->sortDocumentsByRequestedLanguage($documents,$languages);
+        $isoMatches = $service->sortDocumentsByIsoCode($matchedDocuments['--']);
+        $looseMatches = $service->sortDocumentsMock($matchedDocuments['--']);
 
-        return array_merge($matchedDocuments, $possibleMatches);
+        return array_merge($matchedDocuments, $isoMatches, $looseMatches);
     }
 }
 

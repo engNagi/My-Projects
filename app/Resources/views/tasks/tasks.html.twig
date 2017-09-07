@@ -20,7 +20,12 @@
                 <td>{{ task.getTitle() }}</td>
                 <td>
                     {% for language in task.getLanguagesAsArray %}
-                        <span class="label label-info">{{ language }}</span>
+                        {% if translatedDocuments[task.getTaskId][language] is empty %}
+                            {% set class = 'danger' %}
+                        {% else %}
+                            {% set class = 'info' %}
+                        {% endif %}
+                        <span class="label label-{{ class }}">{{ language }}</span>
                     {% endfor %}
                     {% for language, documents in translatedDocuments[task.getTaskId] %}
                         {% if language not in task.getLanguagesAsArray and language != '--' %}
